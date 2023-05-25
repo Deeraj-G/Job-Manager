@@ -42,8 +42,7 @@ db.define_table(
     Field('location', 'string'),
     Field('status', 'string'),
     Field('date_applied', 'date', default=datetime.date.today()),
-    Field('notes', 'string', 512),
-    primarykey=UUID
+    Field('notes', 'string', 512)
 )
 db.define_table(
     'stats',
