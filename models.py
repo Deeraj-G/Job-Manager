@@ -35,7 +35,7 @@ def get_date():
 
 db.define_table(
     'job',
-    Field('UUID', default=lambda: auth.user_id, writable=False,readable=False),
+    Field('UUID', "reference auth_user", default=lambda: auth.user_id, writable=False,readable=False),
     Field('company', 'string'),
     Field('title', 'string'),
     Field('URL', 'string', 2048),
