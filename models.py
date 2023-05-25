@@ -34,14 +34,16 @@ db.define_table(
     Field('UUID', 'reference auth_user'),
     Field('company_name'),
     Field('URL', 'string', 2048),
-    Field('JUID', 'int'),
     Field('title', 'string'),
+    Field('description', 'string'),
+    Field('referal', 'string'),
     Field('salary', 'integer'),
     Field('type', 'string'),
     Field('location', 'string'),
     Field('status', 'string'),
     Field('date_applied', 'date', default=datetime.date.today()),
     Field('notes', 'string', 512),
+    primarykey=UUID
 )
 db.define_table(
     'stats',
@@ -66,7 +68,6 @@ def add_users_for_testing(num_users):
         last_name = first_name = random.choice(LAST_NAMES)
         uuid = "_%s%.2i" % (first_name.lower(), k)
         user = dict(
-            uuid=uuid,
             email=first_name.lower() + "@ucsc.edu",
             first_name=first_name,
             last_name=last_name,
