@@ -32,7 +32,7 @@ from py4web import action, request, abort, redirect, URL
 from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash
 from py4web.utils.url_signer import URLSigner
-from .models import get_username, get_time
+from .models import get_id, get_time, get_date
 
 url_signer = URLSigner(session)
 
@@ -46,12 +46,42 @@ MAX_RESULTS = 20  # Maximum number of returned meows.
 def index():
     return dict(
         # COMPLETE: return here any signed URLs you need.
-        x=URL('x', signer=url_signer),
+        load_jobs_url=URL('get_jobs', signer=url_signer),
+        add_job_url=URL('add_job', signer=url_signer),
+        delete_job_url=URL('delete_job', signer=url_signer),
     )
 
 
-@action("get_x")
+@action("get_jobs")
 @action.uses(db, auth.user)
-def get_x():
-    #
-    return dict()
+def get_jobs():
+    jobs = db(db.auth_user == get_id()).select("jobs").as_list()
+    return dict(jobs=jobs)
+
+
+@action('add_job', method=["POST"])
+@action.uses(db, auth.user, url_signer)
+def add_job():
+    id = db.job.insert(
+        company = request.json.get('company'),
+        title = request.json.get('title'),
+        url = request.json.get('url'),
+        description = request.json.get('description'),
+        referral = request.json.get('referral'),
+        salary = request.json.get('salary'),
+        type = request.json.get('type'),
+        location = request.json.get('location'),
+        status = request.json.get('status'),
+        date_applied = request.json.get('date_applied'),
+        notes = request.json.get('notes'),
+    )
+    return dict(id=id)
+
+
+@action('delete_job')
+@action.uses(url_signer.verify(), db)
+def delete_job():
+    id = request.params.get('id')
+    assert id is not None
+    db(db.job.id == id).delete()
+    return "ok"

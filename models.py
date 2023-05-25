@@ -9,19 +9,23 @@ from .common import db, Field, auth
 from pydal.validators import *
 
 TESTING_USERS_NUM = 20
+TESTING_JOB_NUM = 20
 
 
 def get_user_email():
     return auth.current_user.get('email') if auth.current_user else None
 
 
-def get_username():
-    return auth.current_user.get('username') if auth.current_user else None
+def get_id():
+    return auth.current_user.get('id') if auth.current_user else None
 
 
 def get_time():
     return datetime.datetime.utcnow()
 
+
+def get_date():
+    return datetime.date.today()
 
 ### Define your table below
 #
@@ -31,19 +35,18 @@ def get_time():
 
 db.define_table(
     'job',
-    Field('UUID', 'reference auth_user'),
-    Field('company_name'),
+    Field('UUID', 'reference auth_user', default=get_id(),writable=False,readable=False),
+    Field('company', notnull=True, required=True),
+    Field('title', 'string', notnull=True),
     Field('URL', 'string', 2048),
-    Field('title', 'string'),
     Field('description', 'string'),
-    Field('referal', 'string'),
+    Field('referral', 'string'),
     Field('salary', 'integer'),
     Field('type', 'string'),
     Field('location', 'string'),
-    Field('status', 'string'),
-    Field('date_applied', 'date', default=datetime.date.today()),
-    Field('notes', 'string', 512),
-    primarykey=UUID
+    Field('status', 'string', notnull=True),
+    Field('date_applied', 'date', default=get_date()),
+    Field('notes', 'string'),
 )
 db.define_table(
     'stats',
@@ -51,6 +54,10 @@ db.define_table(
     Field('URL', 'string', 2048),
 
 )
+
+db.job.id.readable = db.job.id.writable = False
+db.stats.id.readable = db.stats.id.writable = False
+
 
 db.commit()
 
@@ -78,5 +85,28 @@ def add_users_for_testing(num_users):
     db.commit()
 
 
+def add_jobs_to_users_for_testing(num_jobs):
+    # Get list of test users
+    test_users = db(db.auth_user.username.startswith("_")).as_list()
+    # Clear out test user's jobs if they have them
+    for user in test_users:
+            db(db.job.UUID == user["id"]).delete()
+            
+    print("Adding", num_new_users, "jobs.")
+    for k in range(num_jobs):
+        first_name = random.choice(FIRST_NAMES)
+        last_name = first_name = random.choice(LAST_NAMES)
+        uuid = "_%s%.2i" % (first_name.lower(), k)
+        user = dict(
+            email=first_name.lower() + "@ucsc.edu",
+            first_name=first_name,
+            last_name=last_name,
+            dob=dob,
+            password=first_name,  # To facilitate testing.
+        )
+        auth.register(user, send=False)
+    db.commit()
+
 # Comment out this line if you are not interested. 
 add_users_for_testing(TESTING_USERS_NUM)
+#add_jobs_to_users_for_testing(TESTING_JOB_NUM)
