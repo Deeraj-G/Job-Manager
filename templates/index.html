@@ -1,51 +1,52 @@
 [[extend 'layout.html']]
 
 <style>
-[v-cloak] {
-     display: none;
-}
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <div class="section" id="vue-target" v-cloak>
 
-  <div class="container block">
-    <h1 class="title">Job Manager</h1>
-    <table class="table is-striped is-fullwidth">
-      <tr>
-        <th>Company Name</th>
-        <th>Job Title</th>
-        <th>URL</th>
-        <th>Job Description</th>
-        <th>Refferal</th>
-        <th>Salary Estimate</th>
-        <th>Type</th>
-        <th>Location</th>
-        <th>Status</th>
-        <th>Date Applied</th>
-        <th>Other Notes</th>
-      </tr>
-      <tr v-for="r in rows">
-        <td v-for="fn in ['company', 'title', 'URL', 'description', 'referal', 'salary', 'type', 'location', 'status', 'date_applied', 'notes']">
-          <div class="control" :class="{'is-loading': r._state[fn] === 'pending'}">
+    <div class="container block">
+        <h1 class="title">Job Manager</h1>
+        <table class="table is-striped is-fullwidth">
+            <tr>
+                <th>Company Name</th>
+                <th>Job Title</th>
+                <th>URL</th>
+                <th>Job Description</th>
+                <th>Referral</th>
+                <th>Salary Estimate</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Date Applied</th>
+                <th>Other Notes</th>
+            </tr>
+            <tr v-for="r in rows">
+                <td v-for="fn in ['company', 'title', 'URL', 'description', 'referral', 'salary', 'type', 'location', 'status', 'date_applied', 'notes']">
+                    <div class="control" :class="{'is-loading': r._state[fn] === 'pending'}">
 
-            <input type="text" class="input" v-model="r[fn]"
-                   :class="{'is-focused': r._state[fn] === 'edit',
+                        <input type="text" class="input" v-model="r[fn]"
+                               :class="{'is-focused': r._state[fn] === 'edit',
                           'is-static': r._state[fn] === 'clean'}"
-                   :readonly="r._state[fn] === 'clean'"
-                   @click="start_edit(r._idx, fn)"
-                   @blur="stop_edit(r._idx, fn)"
-            />
-
-          </div>
-        </td>
-        <td><button @click="delete_job(r._idx)" class="button is-danger">
-          <i class="fa fa-trash"></i></button></td>
-      </tr>
-    </table>
-    <button @click="add_job(true)" class="button is-primary">
-      <i class="fa fa-plus fa-fw"></i> Add Row
-    </button>
-  </div>
+                               :readonly="r._state[fn] === 'clean'"
+                               @click="start_edit(r._idx, fn)"
+                               @blur="stop_edit(r._idx, fn)" />
+                    </div>
+                </td>
+                <td>
+                    <button @click="delete_job(r._idx)" class="button is-danger">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <button @click="add_job(true)" class="button is-primary">
+            <i class="fa fa-plus fa-fw"></i> Add Row
+        </button>
+    </div>
 
 </div>
 
@@ -53,9 +54,10 @@
 [[block page_scripts]]
 <!-- Loads the index-specific js for Vue -->
 <script>
-  let load_job_url = "[[=XML(load_job_url)]]";
-  let add_job_url = "[[=XML(add_job_url)]]";
-  let delete_job_url = "[[=XML(delete_job_url)]]";
+    let load_jobs_url = "[[=XML(load_jobs_url)]]";
+    let add_job_url = "[[=XML(add_job_url)]]";
+    let delete_job_url = "[[=XML(delete_job_url)]]";
+    let edit_job_url = "[[=XML(edit_job_url)]]";
 </script>
 <script src="js/index.js"></script>
 [[end]]

@@ -27,6 +27,7 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures}) else your app w
 
 import datetime
 import random
+import time
 
 from py4web import action, request, abort, redirect, URL
 from yatl.helpers import A
@@ -49,13 +50,15 @@ def index():
         load_jobs_url=URL('get_jobs', signer=url_signer),
         add_job_url=URL('add_job', signer=url_signer),
         delete_job_url=URL('delete_job', signer=url_signer),
+        edit_job_url=URL('edit_job', signer=url_signer)
     )
 
 
 @action("get_jobs")
-@action.uses(db, auth.user)
+@action.uses(db, auth.user, url_signer.verify())
 def get_jobs():
-    jobs = db(db.auth_user == get_id()).select("jobs").as_list()
+    # assert db.auth_user.id == auth.user_id
+    jobs = db(db.job).select().as_list()
     return dict(jobs=jobs)
 
 
@@ -77,6 +80,16 @@ def add_job():
     )
     return dict(id=id)
 
+
+@action('edit_job', method=["POST"])
+@action.uses(db, auth.user, url_signer.verify())
+def edit_job():
+    id = request.json.get("id")
+    field = request.json.get('field')
+    value = request.json.get('value')
+    db(db.job.id == id).update(**{field: value})
+    time.sleep(1)
+    return "ok"
 
 @action('delete_job')
 @action.uses(url_signer.verify(), db)

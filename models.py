@@ -35,16 +35,16 @@ def get_date():
 
 db.define_table(
     'job',
-    Field('UUID', 'reference auth_user', default=get_id(),writable=False,readable=False),
-    Field('company', notnull=True, required=True),
-    Field('title', 'string', notnull=True),
+    Field('UUID', default=lambda: auth.user_id, writable=False,readable=False),
+    Field('company', 'string'),
+    Field('title', 'string'),
     Field('URL', 'string', 2048),
     Field('description', 'string'),
     Field('referral', 'string'),
     Field('salary', 'integer'),
     Field('type', 'string'),
     Field('location', 'string'),
-    Field('status', 'string', notnull=True),
+    Field('status', 'string'),
     Field('date_applied', 'date', default=get_date()),
     Field('notes', 'string'),
 )
@@ -92,7 +92,7 @@ def add_jobs_to_users_for_testing(num_jobs):
     for user in test_users:
             db(db.job.UUID == user["id"]).delete()
             
-    print("Adding", num_new_users, "jobs.")
+    print("Adding", num_jobs, "jobs.")
     for k in range(num_jobs):
         first_name = random.choice(FIRST_NAMES)
         last_name = first_name = random.choice(LAST_NAMES)
