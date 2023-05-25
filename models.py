@@ -35,7 +35,7 @@ def get_date():
 
 db.define_table(
     'job',
-    Field('UUID', "reference auth_user", default=lambda: auth.user_id, writable=False,readable=False),
+    Field('auth_user_id', "reference auth_user", default=lambda: auth.user_id, writable=False,readable=False),
     Field('company', 'string'),
     Field('title', 'string'),
     Field('URL', 'string', 2048),
@@ -45,12 +45,12 @@ db.define_table(
     Field('type', 'string'),
     Field('location', 'string'),
     Field('status', 'string'),
-    Field('date_applied', 'date', default=get_date()),
+    Field('date_applied', 'string'),
     Field('notes', 'string'),
 )
 db.define_table(
     'stats',
-    Field('JUID', 'reference job'),
+    Field('job_id', 'reference job'),
     Field('URL', 'string', 2048),
 
 )

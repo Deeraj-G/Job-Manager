@@ -58,7 +58,7 @@ def index():
 @action.uses(db, auth.user, url_signer.verify())
 def get_jobs():
     # assert db.auth_user.id == auth.user_id
-    jobs = db(db.job).select().as_list()
+    jobs = db(db.job.auth_user_id == auth.user_id).select().as_list()
     return dict(jobs=jobs)
 
 
