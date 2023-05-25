@@ -137,6 +137,7 @@ let init = (app) => {
             }
         }
     };
+    
 
     app.reset_form = function () {
         app.vue.company = "",
