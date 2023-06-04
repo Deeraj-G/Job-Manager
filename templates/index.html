@@ -46,6 +46,13 @@
         <button @click="add_job(true)" class="button is-primary">
             <i class="fa fa-plus fa-fw"></i> Add Row
         </button>
+        <label for="search">
+
+        </label>
+        <input @input="search_fields" v-model='inputField' id="search" type="text" placeholder="Search users">
+        <div v-for="f in showing_fields">
+            <button @click="autofill_click($event, f)"> {{f.field}}</button>
+        </div>
     </div>
 
 </div>

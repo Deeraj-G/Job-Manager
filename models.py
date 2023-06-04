@@ -46,6 +46,7 @@ db.define_table(
     Field('location', 'string'),
     Field('status', 'string'),
     Field('date_applied', 'string'),
+    Field('field', 'string'),
     Field('notes', 'string'),
 )
 db.define_table(

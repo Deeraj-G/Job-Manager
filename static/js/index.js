@@ -10,6 +10,9 @@ let init = (app) => {
     app.data = {
         // Complete as you see fit.
         rows: [],
+        known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
+        showing_fields: [],
+        inputField:"",
         company: "",
         title: "",
         url: "",
@@ -30,6 +33,15 @@ let init = (app) => {
         return a;
     };
 
+    app.search_fields = function () {
+        app.vue.showing_fields = app.vue.known_fields.filter((item) =>
+                item.field.toLowerCase().includes(app.vue.inputField.toString().toLowerCase())
+        );
+    };
+    app.autofill_click = function (event, item) {
+        app.vue.inputField = item.field
+        app.vue.showing_fields = []
+    };
     app.decorate = (a) => {
         a.map((e) => {
             e._state = { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", notes: "clean" };
@@ -160,6 +172,8 @@ let init = (app) => {
         reset_form: app.reset_form,
         start_edit: app.start_edit,
         stop_edit: app.stop_edit,
+        search_fields: app.search_fields,
+        autofill_click: app.autofill_click
     };
 
     // This creates the Vue instance.
