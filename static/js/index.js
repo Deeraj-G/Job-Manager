@@ -30,7 +30,7 @@ let init = (app) => {
         status: "",
         date_applied: "",
         notes: "",
-        visible: false,
+        visible: true,
     };
 
     app.enumerate = (a) => {
@@ -74,7 +74,6 @@ let init = (app) => {
     };
 
 	app.load_job = function (row_item) {
-		app.vue.visible = false  //hide the dropdown
         app.vue.active_job = [row_item]
     };
 

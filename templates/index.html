@@ -11,9 +11,13 @@
     <div class="container block">
         <h1 class="title">Job Manager</h1>
 		<details role="list">
-			<summary aria-haspopup="listbox" @mouseover="visible=true">Jobs</summary>
+			<summary aria-haspopup="listbox">Jobs</summary>
 			<ul role="listbox" v-if="visible">
-				<li v-for="r in rows"><a @click="load_job(r)">{{r.company}} - {{r.title}} - {{r.date_applied}}</a></li>
+				<li v-for="r in rows"><a @click="load_job(r)">{{r.company}} - {{r.title}} - {{r.date_applied}}
+					<button style="width: 10%;" @click="delete_job(r._idx)" class="secondary">
+                        <a class="fa fa-trash"></a>
+					</button></a>
+				</li>
 				<li @click="add_job(true)"><a>New</a></li>
 			</ul>
 		</details>
