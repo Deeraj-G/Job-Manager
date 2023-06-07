@@ -17,7 +17,8 @@ let init = (app) => {
 				   {name:'Job Description',id:'description'},{name:'Referral',id:'referral'},
 				   {name:'Salary Estimate',id:'salary'},{name:'Type',id:'type'},
 				   {name:'Location',id:'location'},{name:'Status',id:'status'},
-				   {name:'Date Applied',id:'date_applied'},{name:'Other Notes',id:'notes'}],
+				   {name:'Date Applied',id:'date_applied'},{name: 'Field',id: 'field'},
+                   {name:'Other Notes',id:'notes'}],
         inputField:"",
         company: "",
         title: "",
@@ -29,6 +30,7 @@ let init = (app) => {
         location: "",
         status: "",
         date_applied: "",
+        field: "",
         notes: "",
         // True if dropdown is clicked
         visible: true,
@@ -42,12 +44,18 @@ let init = (app) => {
     };
 
     app.search_fields = function () {
-        app.vue.showing_fields = app.vue.known_fields.filter((item) =>
-                item.field.toLowerCase().includes(app.vue.inputField.toString().toLowerCase())
-        );
-        if(app.vue.inputField.length === 0){
-            app.vue.showing_fields = []
-        }
+        axios.get(field_url).then(function (response) {
+            let known_fields = app.vue.known_fields
+            app.vue.known_fields = response.data.fields.concat(app.vue.known_fields);
+            app.vue.showing_fields = app.vue.known_fields.filter((item, index, self) =>
+                item.field.toLowerCase().includes(app.vue.inputField.toString().toLowerCase()) &&
+                self.findIndex((elem) => elem.field === item.field) === index
+            );
+            app.vue.known_fields = known_fields;
+            if(app.vue.inputField.length === 0){
+                app.vue.showing_fields = []
+            }
+        });
     };
 
     app.autofill_click = function (event, item) {
@@ -56,7 +64,7 @@ let init = (app) => {
     };
     app.decorate = (a) => {
         a.map((e) => {
-            e._state = { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", notes: "clean" };
+            e._state = { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" };
             e._server_vals = {
                 company: e.company,
                 title: e.title,
@@ -68,6 +76,7 @@ let init = (app) => {
                 location: e.location,
                 status: e.status,
                 date_applied: e.date_applied,
+                field: e.field,
                 notes: e.notes
             };
         });
@@ -93,8 +102,9 @@ let init = (app) => {
                 location: app.vue.location,
                 status: app.vue.status,
                 date_applied: app.vue.date_applied,
+                field: app.vue.field,
                 notes: app.vue.notes,
-                _state: { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", notes: "clean" },
+                _state: { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" },
             }).then(function (response) {
                 app.vue.rows.push({
                     id: response.data.id,
@@ -108,8 +118,9 @@ let init = (app) => {
                     location: app.vue.location,
                     status: app.vue.status,
                     date_applied: app.vue.date_applied,
+                    field: app.vue.field,
                     notes: app.vue.notes,
-                    _state: { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", notes: "clean" },
+                    _state: { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" },
                     _server_vals: {
                         company: app.vue.company,
                         title: app.vue.title,
@@ -121,6 +132,7 @@ let init = (app) => {
                         location: app.vue.location,
                         status: app.vue.status,
                         date_applied: app.vue.date_applied,
+                        field: app.vue.field,
                         notes: app.vue.notes
                     }
                 });
@@ -178,6 +190,7 @@ let init = (app) => {
             app.vue.location = "",
             app.vue.status = "",
             app.vue.date_applied = "",
+            app.vue.field = "",
             app.vue.notes = ""
     };
 

@@ -50,7 +50,8 @@ def index():
         load_jobs_url=URL('get_jobs', signer=url_signer),
         add_job_url=URL('add_job', signer=url_signer),
         delete_job_url=URL('delete_job', signer=url_signer),
-        edit_job_url=URL('edit_job', signer=url_signer)
+        edit_job_url=URL('edit_job', signer=url_signer),
+        field_url=URL('field', signer=url_signer),
     )
 
 
@@ -99,3 +100,15 @@ def delete_job():
     assert id is not None
     db(db.job.id == id).delete()
     return "ok"
+
+@action("field")
+@action.uses(db, auth.user, url_signer.verify())
+def field():
+    fields = []
+    
+    field_names = db(db.job.field).select(db.job.field, distinct=True).as_list()
+    
+    for name in field_names:
+        fields.append(name) 
+    
+    return dict(fields=fields)
