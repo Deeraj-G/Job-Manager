@@ -10,49 +10,32 @@
 
     <div class="container block">
         <h1 class="title">Job Manager</h1>
-        <table class="table" role="grid">
-            <tr>
-                <th>Company Name</th>
-                <th>Job Title</th>
-                <th>URL</th>
-                <th>Job Description</th>
-                <th>Referral</th>
-                <th>Salary Estimate</th>
-                <th>Type</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Date Applied</th>
-                <th>Other Notes</th>
-            </tr>
-            <tr v-for="r in rows">
-                <td v-for="fn in ['company', 'title', 'URL', 'description', 'referral', 'salary', 'type', 'location', 'status', 'date_applied', 'notes']">
-                    <div class="control" :class="{'is-loading': r._state[fn] === 'pending'}">
+		<details role="list">
+			<summary aria-haspopup="listbox" @mouseover="visible=true">Jobs</summary>
+			<ul role="listbox" v-if="visible">
+				<li v-for="r in rows"><a @click="load_job(r)">{{r.company}} - {{r.title}} - {{r.date_applied}}</a></li>
+				<li @click="add_job(true)"><a>New</a></li>
+			</ul>
+		</details>
+		<div v-for="j in active_job">
+			<div v-for="tag in job_tags">
 
-                        <input type="text" class="input" v-model="r[fn]"
-                               :class="{'is-focused': r._state[fn] === 'edit',
-                          'is-static': r._state[fn] === 'clean'}"
-                               :readonly="r._state[fn] === 'clean'"
-                               @click="start_edit(r._idx, fn)"
-                               @blur="stop_edit(r._idx, fn)" />
-                    </div>
-                </td>
-                <td>
-                    <button @click="delete_job(r._idx)" class="button is-danger">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        </table>
-        <button @click="add_job(true)" class="button is-primary">
-            <i class="fa fa-plus fa-fw"></i> Add Row
-        </button>
-        <label for="search">
+				<b>{{tag.name}}:</b><input type="text" class="input" v-model="j[tag.id]"
+                               :class="{'is-focused': j._state[tag.id] === 'edit',
+                          'is-static': j._state[tag.id] === 'clean'}"
+                               :readonly="j._state[tag.id] === 'clean'"
+                               @click="start_edit(j._idx, tag.id)"
+                               @blur="stop_edit(j._idx, tag.id)" />
+			</div>
+			<label for="search">
 
-        </label>
-        <input @input="search_fields" v-model='inputField' id="search" type="text" placeholder="Search users">
-        <div v-for="f in showing_fields">
-            <button @click="autofill_click($event, f)"> {{f.field}}</button>
-        </div>
+			</label>
+
+			<input @input="search_fields" v-model='inputField' id="search" type="text" placeholder="Search field">
+			<div v-for="f in showing_fields">
+				<button @click="autofill_click($event, f)">{{f.field}}</button>
+			</div>
+		</div>
     </div>
 
 </div>

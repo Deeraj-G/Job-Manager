@@ -11,6 +11,15 @@ from pydal.validators import *
 TESTING_USERS_NUM = 20
 TESTING_JOB_NUM = 20
 
+AVAILIBLE_FIELDS = {
+    "Food Service": [["Entry Level",3]],
+    "Physics": [["Mathmatics",3],["Natural Science",2],["Astronomy",1]],
+    "Computer Science": [["Data Science",3],["Information Technology",2],["Computer Engineering",1]],
+    "Computer Engineering": [["Robotics",3],["Electrical Engineering",2],[]],
+    "English": [["Writing",3],["Teaching",2]],
+    "Mathmatics": [["Teaching",0],["",0],["",0]],
+    "":[["",0],["",0],["",0]],
+}
 
 def get_user_email():
     return auth.current_user.get('email') if auth.current_user else None
@@ -53,7 +62,12 @@ db.define_table(
     'stats',
     Field('job_id', 'reference job'),
     Field('URL', 'string', 2048),
-
+)
+db.define_table(
+    'field',
+    Field('field', 'string'),
+    Field('relate', 'string'),
+    Field('weight', 'integer'),
 )
 
 db.job.id.readable = db.job.id.writable = False
@@ -108,6 +122,9 @@ def add_jobs_to_users_for_testing(num_jobs):
         auth.register(user, send=False)
     db.commit()
 
+def add_fields(num_jobs):
+    for f in AVAILIBLE_FIELDS:
+        db.field.insert
 # Comment out this line if you are not interested. 
 add_users_for_testing(TESTING_USERS_NUM)
 #add_jobs_to_users_for_testing(TESTING_JOB_NUM)

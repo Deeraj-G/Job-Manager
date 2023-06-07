@@ -66,17 +66,17 @@ def get_jobs():
 @action.uses(db, auth.user, url_signer)
 def add_job():
     id = db.job.insert(
-        company = request.json.get('company'),
-        title = request.json.get('title'),
-        url = request.json.get('url'),
-        description = request.json.get('description'),
-        referral = request.json.get('referral'),
-        salary = request.json.get('salary'),
-        type = request.json.get('type'),
-        location = request.json.get('location'),
-        status = request.json.get('status'),
-        date_applied = request.json.get('date_applied'),
-        notes = request.json.get('notes'),
+        company=request.json.get('company'),
+        title=request.json.get('title'),
+        url=request.json.get('url'),
+        description=request.json.get('description'),
+        referral=request.json.get('referral'),
+        salary=request.json.get('salary'),
+        type=request.json.get('type'),
+        location=request.json.get('location'),
+        status=request.json.get('status'),
+        date_applied=request.json.get('date_applied'),
+        notes=request.json.get('notes'),
     )
     return dict(id=id)
 
@@ -90,6 +90,7 @@ def edit_job():
     db(db.job.id == id).update(**{field: value})
     time.sleep(1)
     return "ok"
+
 
 @action('delete_job')
 @action.uses(url_signer.verify(), db)

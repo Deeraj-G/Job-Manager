@@ -12,6 +12,12 @@ let init = (app) => {
         rows: [],
         known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
         showing_fields: [],
+		active_job: [],
+		job_tags: [{name:'Company Name',id:'company'},{name:'Job Title',id:'title'},{name:'URL',id:'URL'},
+				   {name:'Job Description',id:'description'},{name:'Referral',id:'referral'},
+				   {name:'Salary Estimate',id:'salary'},{name:'Type',id:'type'},
+				   {name:'Location',id:'location'},{name:'Status',id:'status'},
+				   {name:'Date Applied',id:'date_applied'},{name:'Other Notes',id:'notes'}],
         inputField:"",
         company: "",
         title: "",
@@ -24,6 +30,7 @@ let init = (app) => {
         status: "",
         date_applied: "",
         notes: "",
+        visible: false,
     };
 
     app.enumerate = (a) => {
@@ -37,7 +44,11 @@ let init = (app) => {
         app.vue.showing_fields = app.vue.known_fields.filter((item) =>
                 item.field.toLowerCase().includes(app.vue.inputField.toString().toLowerCase())
         );
+        if(app.vue.inputField.length === 0){
+            app.vue.showing_fields = []
+        }
     };
+
     app.autofill_click = function (event, item) {
         app.vue.inputField = item.field
         app.vue.showing_fields = []
@@ -60,6 +71,11 @@ let init = (app) => {
             };
         });
         return a;
+    };
+
+	app.load_job = function (row_item) {
+		app.vue.visible = false  //hide the dropdown
+        app.vue.active_job = [row_item]
     };
 
     // Add a row to the jobs table
@@ -173,7 +189,8 @@ let init = (app) => {
         start_edit: app.start_edit,
         stop_edit: app.stop_edit,
         search_fields: app.search_fields,
-        autofill_click: app.autofill_click
+        autofill_click: app.autofill_click,
+        load_job: app.load_job
     };
 
     // This creates the Vue instance.
