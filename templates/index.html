@@ -9,39 +9,62 @@
 <div class="section" id="vue-target" v-cloak>
 
     <div class="container block">
-        <h1 class="title">Job Manager</h1>
-		<details role="list">
-			<summary aria-haspopup="listbox">Jobs</summary>
-			<ul role="listbox" v-if="visible">
-				<li v-for="r in rows"><a @click="load_job(r)">{{r.company}} - {{r.title}} - {{r.date_applied}}
-					<button style="width: 10%;" @click="delete_job(r._idx)" class="secondary">
-                        <a class="fa fa-trash"></a>
-					</button></a>
-				</li>
-				<li @click="add_job(true)"><a>New</a></li>
-			</ul>
-		</details>
-		<div v-for="j in active_job">
-			<div v-for="tag in job_tags">
-
-				<b>{{tag.name}}:</b><input type="text" class="input" v-model="j[tag.id]"
-                               :class="{'is-focused': j._state[tag.id] === 'edit',
-                          'is-static': j._state[tag.id] === 'clean'}"
-                               :readonly="j._state[tag.id] === 'clean'"
-                               @click="start_edit(j._idx, tag.id)"
-                               @blur="stop_edit(j._idx, tag.id)" />
+		<!-- Title -->
+        <h1 class="title">
+			<div style="text-align: center">
+				Job Manager
 			</div>
-			<label for="search">
+		</h1>
 
-			</label>
-
+		<!-- Stats portion to filter by Industry Field -->
+		<label for="search">
 			<input @input="search_fields" v-model='inputField' id="search" type="text" placeholder="Search field">
 			<div v-for="f in showing_fields">
 				<button @click="autofill_click($event, f)">{{f.field}}</button>
 			</div>
+		</label>
+
+		<!-- Listing of User's Jobs -->
+		<details role="list">
+			<summary aria-haspopup="listbox">My Jobs</summary>
+			<ul role="listbox" v-if="visible">
+				<li class="grid" v-for="r in rows">
+					<!-- Job in Dropdown -->
+					<a class="level-item" @click="load_job(r)">
+						{{r.company}} - {{r.title}} - {{r.date_applied}}
+					</a>
+					<!-- Delete Button -->
+					<div style="text-align: right">
+						<a class="button is-danger" @click="delete_job(r._idx)" aria-label="delete">
+							<span class="icon is-small">
+								<i class="fa fa-trash" aria-hidden="true"></i>
+							</span>
+						</a>
+					</div>
+				</li>
+				<!-- Add New Job -->
+				<li @click="add_job(true)">
+					<a class="button">
+						<span class="icon">
+							<i class="fa fa-plus"></i>
+						</span>
+					</a>
+				</li>
+			</ul>
+		</details>
+		<div v-for="j in active_job">
+			<!-- Job Info Input Area -->
+			<div v-for="tag in job_tags">
+				<b>{{tag.name}}:</b>
+				<input type="text" class="input" v-model="j[tag.id]"
+					:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+					:readonly="j._state[tag.id] === 'clean'"
+					@click="start_edit(j._idx, tag.id)"
+					@blur="stop_edit(j._idx, tag.id)"
+				/>
+			</div>
 		</div>
     </div>
-
 </div>
 
 

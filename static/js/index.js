@@ -30,6 +30,7 @@ let init = (app) => {
         status: "",
         date_applied: "",
         notes: "",
+        // True if dropdown is clicked
         visible: true,
     };
 
