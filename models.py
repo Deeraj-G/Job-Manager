@@ -57,11 +57,16 @@ db.define_table(
     Field('date_applied', 'string'),
     Field('field', 'string'),
     Field('notes', 'string'),
+    Field('time_entered', default=datetime.datetime.utcnow())
 )
 db.define_table(
     'stats',
     Field('job_id', 'reference job'),
-    Field('URL', 'string', 2048),
+    Field('success_rate'), # Pull from Status in Jobs table
+    Field('apply_counter'), # Counter for how many people applied to a job
+    Field('entry_time'), # Pulls from time_entered in Jobs table
+    Field('salary_range'), # Pulls from Salary in jobs table, average the salaries. Up to implementation
+    Field('similar_jobs'), # Up to implementation
 )
 db.define_table(
     'field',
