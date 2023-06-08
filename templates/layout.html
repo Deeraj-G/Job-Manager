@@ -28,21 +28,29 @@
             <div class="buttons">
               [[if globals().get('user'):]]
                 <div class="navbar-item has-dropdown is-hoverable">
-                  
-                  <!-- Just displays username -->
+
+                  <!-- Just displays username, not clickable -->
                   <!-- <a class="navbar-link is-primary">
                     [[=globals().get('user').get('username')]]
                   </a> -->
 
                   <!-- Display user options in the top right corner -->
                   <div class="navbar-dropdown" style="text-align: right;width: 90%">
-                    <a class="navbar-item" href="[[=URL('auth/profile')]]">Profile</a>
+                    <a class="navbar-item" href="[[=URL('auth/profile')]]">
+                      <span class="icon is-small">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                      </span>
+                    </a>
                   </div>
                   <div class="navbar-dropdown" style="text-align: right;width: 90%">
-                    <a class="navbar-item" href="[[=URL('auth/logout')]]">Logout</a>
+                    <a class="navbar-item" href="[[=URL('auth/logout')]]">
+                      <span>Log out</span>
+                    </a>
                   </div>
                   <div class="navbar-dropdown" style="text-align: right;">
-                    <a class="navbar-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
+                    <a class="navbar-item" href="[[=URL('auth/change_password')]]">
+                      <span>Change Password</span>
+                    </a>
                   </div>
                 </div>
               [[else:]]
