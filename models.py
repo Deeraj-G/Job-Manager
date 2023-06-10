@@ -45,27 +45,28 @@ def get_date():
 db.define_table(
     'job',
     Field('auth_user_id', "reference auth_user", default=lambda: auth.user_id, writable=False,readable=False),
-    Field('company', 'string'),
-    Field('title', 'string'),
+    Field('company', 'string', notnull=True),
+    Field('title', 'string', notnull=True),
     Field('URL', 'string', 2048),
-    Field('description', 'string'),
+    Field('description', 'text'), # 'text' datatype allows for 32768 characters compared to string 512 characters
     Field('referral', 'string'),
     Field('salary', 'integer'),
     Field('type', 'string'),
     Field('location', 'string'),
-    Field('status', 'string'),
-    Field('date_applied', 'string'),
-    Field('field', 'string'),
-    Field('notes', 'string'),
+    Field('status', 'string', notnull=True),
+    Field('date_applied', 'string', requires = IS_DATE(format=('%m-%d-%Y'), error_message='must be MM-DD-YYYY')),
+    Field('field', 'string', notnull=True),
+    Field('notes', 'text'),
     Field('time_entered', default=datetime.datetime.utcnow())
 )
+
 db.define_table(
     'stats',
     Field('job_id', 'reference job'),
     Field('success_rate'), # Pull from Status in Jobs table
     Field('apply_counter'), # Counter for how many people applied to a job
-    Field('entry_time'), # Pulls from time_entered in Jobs table
-    Field('salary_range'), # Pulls from Salary in jobs table, average the salaries. Up to implementation
+    Field('display_time'), # Pulls from time_entered and status in Jobs table, should wait two weeks and then show the inputted URLs on Similar Jobs page
+    Field('salary_range'), # Pulls from Salary and Field in jobs table, average the salaries. Up to implementation
     Field('similar_jobs'), # Up to implementation
 )
 db.define_table(
@@ -76,7 +77,11 @@ db.define_table(
 )
 
 db.job.id.readable = db.job.id.writable = False
+db.job.time_entered.readable = db.job.time_entered.writable = False # System logs this for internal use
 db.stats.id.readable = db.stats.id.writable = False
+db.field.id.readable = db.field.id.writable = False
+
+
 
 
 db.commit()

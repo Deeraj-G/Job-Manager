@@ -20,7 +20,7 @@
 		<label for="search">
 			<input @input="search_fields" v-model='inputField' id="search" type="text" placeholder="Search field">
 			<div v-for="f in showing_fields">
-				<button @click="autofill_click($event, f)">{{f.field}}</button>
+				<button class="secondary" @click="autofill_click($event, f)">{{f.field}}</button>
 			</div>
 		</label>
 
@@ -35,7 +35,7 @@
 					</a>
 					<!-- Delete Button -->
 					<div style="text-align: right">
-						<a class="button is-danger" @click="delete_job(r._idx)" aria-label="delete">
+						<a class="button" @click="delete_job(r._idx)" aria-label="delete">
 							<span class="icon is-small">
 								<i class="fa fa-trash" aria-hidden="true"></i>
 							</span>
@@ -52,29 +52,52 @@
 				</li>
 			</ul>
 		</details>
+		<!-- Job Info Input Area -->
 		<div v-for="j in active_job">
-			<!-- Job Info Input Area -->
+
 			<div v-for="tag in job_tags">
 				<b>{{tag.name}}:</b>
-				<div v-if="tag.id == 'field'">
-					<input type="text" class="input" v-model="j[tag.id]"
-					:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
-					:readonly="j._state[tag.id] === 'clean'"
-					@click="start_edit(j._idx, tag.id)"
-					@blur="stop_edit(j._idx, tag.id)"
-					@input="search_fields_field(j._idx)"
-					/>
-					<div v-for="f in showing_fields_item">
-						<button @click="autofill_click_field(j._idx, f); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{f.field}}</button>
+
+				<!-- Dropdown for the Status field -->
+				<div v-if="tag.id == 'status'">
+					<!-- <input type="text" class="input" v-model="j[tag.id]"
+						:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+						:readonly="j._state[tag.id] === 'clean'"
+						@click="start_edit(j._idx, tag.id)" 
+						@blur="stop_edit(j._idx, tag.id)"
+						@input="search_fields_status(j._idx, tag.id);"
+					/> -->
+					<button class="secondary outline text-start" 
+						@click="start_edit(j._idx, tag.id); search_fields_status(j._idx, tag.id);" 
+						@input="stop_edit(j._idx, tag.id)"
+						
+					>{{rows[j._idx].status}}</button>
+					<div v-for="s in showing_status_item">
+						<button class="secondary" @click="autofill_click_status(j._idx, s); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{s.status}}</button>
 					</div>
 				</div>
 
+				<div v-else-if="tag.id == 'field'">
+					<!-- Dropdown for the Field field -->
+					<input type="text" class="input" v-model="j[tag.id]"
+						:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+						:readonly="j._state[tag.id] === 'clean'"
+						@click="start_edit(j._idx, tag.id)"
+						@blur="stop_edit(j._idx, tag.id)"
+						@input="search_fields_field(j._idx)"
+					/>
+					<div v-for="f in showing_fields_item">
+						<button class="secondary" @click="autofill_click_field(j._idx, f); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{f.field}}</button>
+					</div>
+				</div>
+
+				<!-- Input boxes for the other fields -->
 				<input v-else type="text" class="input" v-model="j[tag.id]"
 					:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
-					:readonly="j._state[tag.id] === 'clean'"
-					@click="start_edit(j._idx, tag.id)"
-					@blur="stop_edit(j._idx, tag.id)"
-				/>
+						:readonly="j._state[tag.id] === 'clean'"
+						@click="start_edit(j._idx, tag.id)"
+						@blur="stop_edit(j._idx, tag.id)"
+					/>
 			</div>
 		</div>
     </div>

@@ -11,9 +11,12 @@ let init = (app) => {
         // Complete as you see fit.
         rows: [],
         known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
-        showing_fields: [],
-        showing_fields_item: [],
-		active_job: [],
+        known_statuses: [{status:"In Progress"}, {status:"OA"}, {status:"Interview"}, {status:"Accepted"}, {status:"Rejected"}],
+        showing_fields: [], // Dropdown options for Field field
+        showing_status: [], // Dropdown options for Status field
+        showing_fields_item: [], // This is the full list of Fields in the Job table when user inputs characters
+        showing_status_item: [], // This is the full list of Statuses in the Job table when user inputs characters
+        active_job: [],
 		job_tags: [{name:'Company Name',id:'company'},{name:'Job Title',id:'title'},{name:'URL',id:'URL'},
 				   {name:'Job Description',id:'description'},{name:'Referral',id:'referral'},
 				   {name:'Salary Estimate',id:'salary'},{name:'Type',id:'type'},
@@ -33,7 +36,6 @@ let init = (app) => {
         date_applied: "",
         field: "",
         notes: "",
-        // True if dropdown is clicked
         visible: true,
     };
 
@@ -44,6 +46,7 @@ let init = (app) => {
         return a;
     };
 
+    // Search through the Fields in the Job table and the showing_fields data
     app.search_fields = function () {
         axios.get(field_url).then(function (response) {
             let known_fields = app.vue.known_fields
@@ -59,11 +62,30 @@ let init = (app) => {
         });
     };
 
+    // Autofill the searched item
     app.autofill_click = function (event, item) {
         app.vue.inputField = item.field
         app.vue.showing_fields = []
     };
 
+    // Search through the job.fields database for known fields
+    app.search_fields_status = function (row_idx) {
+        // Populate showing_status_item with the known_statuses
+        app.vue.showing_status_item = app.vue.known_statuses
+
+        // Show no status if input is empty
+        if(app.vue.rows[row_idx].status.length === 0){
+            app.vue.showing_status_item = []
+        }
+    };
+
+    // Autofill for the Status entry in the Job table
+    app.autofill_click_status = function (row_idx, item) {
+        app.vue.rows[row_idx].status = item.status
+        app.vue.showing_status_item = []
+    };
+
+    // Search through the job.fields database for known fields
     app.search_fields_field = function (row_idx) {
         axios.get(field_url).then(function (response) {
             let known_fields = app.vue.known_fields
@@ -82,10 +104,12 @@ let init = (app) => {
 
     };
 
+    // Autofill for the Field entry in the Job table
     app.autofill_click_field = function (row_idx, item) {
         app.vue.rows[row_idx].field = item.field
         app.vue.showing_fields_item = []
     };
+
     app.decorate = (a) => {
         a.map((e) => {
             e._state = { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" };
@@ -107,6 +131,7 @@ let init = (app) => {
         return a;
     };
 
+    // Loads the current job entry
 	app.load_job = function (row_item) {
         app.vue.active_job = [row_item]
     };
@@ -192,7 +217,7 @@ let init = (app) => {
                 row._state[fn] = "pending";
                 axios.post(edit_job_url, {
                     id: row.id, field: fn, value: row[fn]
-                }).then(function (result) {
+                }).then(function (response) {
                     row._state[fn] = "clean";
                     row._server_vals[fn] = row[fn];
                 })
@@ -227,9 +252,12 @@ let init = (app) => {
         stop_edit: app.stop_edit,
         search_fields: app.search_fields,
         search_fields_field: app.search_fields_field,
+        search_fields_status: app.search_fields_status,
         autofill_click: app.autofill_click,
+        load_job: app.load_job,
+
         autofill_click_field: app.autofill_click_field,
-        load_job: app.load_job
+        autofill_click_status: app.autofill_click_status,
     };
 
     // This creates the Vue instance.
