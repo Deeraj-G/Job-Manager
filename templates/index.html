@@ -56,7 +56,20 @@
 			<!-- Job Info Input Area -->
 			<div v-for="tag in job_tags">
 				<b>{{tag.name}}:</b>
-				<input type="text" class="input" v-model="j[tag.id]"
+				<div v-if="tag.id == 'field'">
+					<input type="text" class="input" v-model="j[tag.id]"
+					:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+					:readonly="j._state[tag.id] === 'clean'"
+					@click="start_edit(j._idx, tag.id)"
+					@blur="stop_edit(j._idx, tag.id)"
+					@input="search_fields_field(j._idx)"
+					/>
+					<div v-for="f in showing_fields_item">
+						<button @click="autofill_click_field(j._idx, f)">{{f.field}}</button>
+					</div>
+				</div>
+
+				<input v-else type="text" class="input" v-model="j[tag.id]"
 					:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
 					:readonly="j._state[tag.id] === 'clean'"
 					@click="start_edit(j._idx, tag.id)"

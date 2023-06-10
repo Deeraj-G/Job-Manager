@@ -12,6 +12,7 @@ let init = (app) => {
         rows: [],
         known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
         showing_fields: [],
+        showing_fields_item: [],
 		active_job: [],
 		job_tags: [{name:'Company Name',id:'company'},{name:'Job Title',id:'title'},{name:'URL',id:'URL'},
 				   {name:'Job Description',id:'description'},{name:'Referral',id:'referral'},
@@ -61,6 +62,29 @@ let init = (app) => {
     app.autofill_click = function (event, item) {
         app.vue.inputField = item.field
         app.vue.showing_fields = []
+    };
+
+    app.search_fields_field = function (row_idx) {
+        axios.get(field_url).then(function (response) {
+            let known_fields = app.vue.known_fields
+            app.vue.known_fields = response.data.fields.concat(app.vue.known_fields);
+
+            app.vue.showing_fields_item = app.vue.known_fields.filter((item, index, self) =>
+                item.field.toLowerCase().includes(app.vue.rows[row_idx].field.toString().toLowerCase()) &&
+                self.findIndex((elem) => elem.field === item.field) === index
+            );
+            app.vue.known_fields = known_fields;
+            console.log(app.vue.rows[row_idx].field)
+            if(app.vue.rows[row_idx].field.length === 0){
+                app.vue.showing_fields_item = []
+            }
+        });
+
+    };
+
+    app.autofill_click_field = function (row_idx, item) {
+        app.vue.rows[row_idx].field = item.field
+        app.vue.showing_fields_item = []
     };
     app.decorate = (a) => {
         a.map((e) => {
@@ -202,7 +226,9 @@ let init = (app) => {
         start_edit: app.start_edit,
         stop_edit: app.stop_edit,
         search_fields: app.search_fields,
+        search_fields_field: app.search_fields_field,
         autofill_click: app.autofill_click,
+        autofill_click_field: app.autofill_click_field,
         load_job: app.load_job
     };
 
