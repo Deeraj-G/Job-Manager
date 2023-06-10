@@ -65,7 +65,7 @@
 					@input="search_fields_field(j._idx)"
 					/>
 					<div v-for="f in showing_fields_item">
-						<button @click="autofill_click_field(j._idx, f)">{{f.field}}</button>
+						<button @click="autofill_click_field(j._idx, f); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{f.field}}</button>
 					</div>
 				</div>
 
