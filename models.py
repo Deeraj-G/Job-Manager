@@ -71,9 +71,8 @@ db.define_table(
 )
 db.define_table(
     'field',
-    Field('field', 'string'),
-    Field('relate', 'string'),
-    Field('weight', 'integer'),
+    Field('job_id', 'reference job'),
+    Field('name', 'string'),
 )
 
 db.job.id.readable = db.job.id.writable = False
