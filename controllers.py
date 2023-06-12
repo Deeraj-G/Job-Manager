@@ -138,13 +138,6 @@ def get_field_url():
 
 @action('show_field_companies/<field_name>')
 @action.uses("show_field_companies.html", db, url_signer.verify())
-def show_field_companies(field_name=None):
-    companies_list = db(db.job.field == field_name).select('company').as_list()
-    companies_list = [item['_extra']['company'] for item in companies_list]
-    
-    companies = []
-    
-    for company in companies_list:
-        companies.append(company)
-    
-    return dict(field_name=field_name, companies=companies)
+def show_field_companies(field_name):
+    return dict(field_name=field_name)
+

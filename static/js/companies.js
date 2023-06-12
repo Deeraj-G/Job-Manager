@@ -9,7 +9,7 @@ let init = (app) => {
 
     // This is the Vue data.
     app.data = {
-        animals: [],
+        companies: [],
     };
 
     app.enumerate = (a) => {
@@ -34,9 +34,7 @@ let init = (app) => {
 
     // And this initializes it.
     app.init = () => {
-        axios.get(get_animals_url).then(function (r) {
-            app.vue.animals = app.enumerate(r.data.animals);
-        })
+        app.vue.companies = app.enumerate(app.vue.companies);
     };
 
     // Call to the initializer.
