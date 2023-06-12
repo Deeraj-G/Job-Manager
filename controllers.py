@@ -112,3 +112,8 @@ def field():
         fields.append(name) 
     
     return dict(fields=fields)
+
+@action('job_analytics')
+@action.uses('job_analytics.html', auth.user, url_signer)
+def job_analytics():
+    return dict()
