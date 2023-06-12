@@ -65,7 +65,7 @@ def get_jobs():
 
 @action('add_job', method=["POST"])
 @action.uses(db, auth.user, url_signer)
-def add_job():
+def add_job(): 
     id = db.job.insert(
         company=request.json.get('company'),
         title=request.json.get('title'),
@@ -77,8 +77,10 @@ def add_job():
         location=request.json.get('location'),
         status=request.json.get('status'),
         date_applied=request.json.get('date_applied'),
+        field=request.json.get('field'),
         notes=request.json.get('notes'),
     )
+    
     return dict(id=id)
 
 
@@ -88,7 +90,16 @@ def edit_job():
     id = request.json.get("id")
     field = request.json.get('field')
     value = request.json.get('value')
+    
+    check = db(db.field.job_id == id).select().as_list()
+    
     db(db.job.id == id).update(**{field: value})
+  
+    if field == 'field' and len(check) == 0:
+        db.field.insert(job_id=id, name=value)
+    elif field == 'field' and len(check) > 0:
+        db(db.field.job_id == id).update(**{'name': value})
+
     time.sleep(1)
     return "ok"
 
