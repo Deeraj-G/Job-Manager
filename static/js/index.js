@@ -64,8 +64,12 @@ let init = (app) => {
 
     // Autofill the searched item
     app.autofill_click = function (event, item) {
-        app.vue.inputField = item.field
-        app.vue.showing_fields = []
+        axios.get(get_field_url, {params: {field_name: item.field}}).then(function (response) {
+            window.location = response.data.url;
+
+            app.vue.inputField = item.field
+            app.vue.showing_fields = []
+        });
     };
 
     // Search through the job.fields database for known fields

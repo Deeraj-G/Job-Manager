@@ -16,9 +16,9 @@
 			</div>
 		</h1>
 
-		<!-- Stats portion to filter by Industry Field -->
+		<!-- Industry Field Search Bar -->
 		<label for="search">
-			<input @input="search_fields" v-model='inputField' id="search" type="text" placeholder="Search field">
+			<input @input="search_fields" v-model='inputField' id="search" type="text" placeholder="Search Field">
 			<div v-for="f in showing_fields">
 				<button class="secondary" @click="autofill_click($event, f)">{{f.field}}</button>
 			</div>
@@ -115,6 +115,7 @@
     let delete_job_url = "[[=XML(delete_job_url)]]";
     let edit_job_url = "[[=XML(edit_job_url)]]";
 	let field_url = "[[=XML(field_url)]]";
+	let get_field_url = "[[=XML(get_field_url)]]";
 </script>
 <script src="js/index.js"></script>
 [[end]]
