@@ -29,7 +29,7 @@
 			<summary aria-haspopup="listbox">My Jobs</summary>
 			<ul role="listbox" v-if="visible">
 				<li class="grid" v-for="r in rows">
-					<!-- Job in Dropdown -->
+					<!-- Job Listing in Dropdown -->
 					<a class="level-item" @click="load_job(r)">
 						{{r.company}} - {{r.title}} - {{r.date_applied}}
 					</a>
@@ -60,18 +60,18 @@
 
 				<!-- Dropdown for the Status field -->
 				<div v-if="tag.id == 'status'">
-					<!-- <input type="text" class="input" v-model="j[tag.id]"
+					<input type="text" class="input" v-model="j[tag.id]"
 						:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
 						:readonly="j._state[tag.id] === 'clean'"
-						@click="start_edit(j._idx, tag.id)" 
+						@click="start_edit(j._idx, tag.id); search_fields_status(j._idx)"
 						@blur="stop_edit(j._idx, tag.id)"
-						@input="search_fields_status(j._idx, tag.id);"
-					/> -->
-					<button class="secondary outline text-start" 
-						@click="start_edit(j._idx, tag.id); search_fields_status(j._idx, tag.id);" 
+						@input="search_fields_status(j._idx)"
+					/>
+					<!-- <button class="secondary outline text-start"
+						@click="start_edit(j._idx, tag.id); search_fields_status(j._idx);" 
 						@input="stop_edit(j._idx, tag.id)"
 						
-					>{{rows[j._idx].status}}</button>
+					>{{rows[j._idx].status}}</button> -->
 					<div v-for="s in showing_status_item">
 						<button class="secondary" @click="autofill_click_status(j._idx, s); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{s.status}}</button>
 					</div>

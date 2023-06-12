@@ -11,11 +11,11 @@ let init = (app) => {
         // Complete as you see fit.
         rows: [],
         known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
-        known_statuses: [{status:"In Progress"}, {status:"OA"}, {status:"Interview"}, {status:"Accepted"}, {status:"Rejected"}],
+        known_statuses: [{status:"In Progress"}, {status:"Interview"}, {status:"Accepted"}, {status:"Rejected"}],
         showing_fields: [], // Dropdown options for Field field
         showing_status: [], // Dropdown options for Status field
         showing_fields_item: [], // This is the full list of Fields in the Job table when user inputs characters
-        showing_status_item: [], // This is the full list of Statuses in the Job table when user inputs characters
+        showing_status_item: [], // This is the list of Statuses allowed in the Job table
         active_job: [],
 		job_tags: [{name:'Company Name',id:'company'},{name:'Job Title',id:'title'},{name:'URL',id:'URL'},
 				   {name:'Job Description',id:'description'},{name:'Referral',id:'referral'},
@@ -190,6 +190,10 @@ let init = (app) => {
             });
     };
 
+    app.console = function (obj) {
+        console.log(obj);
+    };
+
     app.delete_job = function (row_idx) {
         let id = app.vue.rows[row_idx].id;
         axios.get(delete_job_url, { params: { id: id } }).then(function (response) {
@@ -255,7 +259,7 @@ let init = (app) => {
         search_fields_status: app.search_fields_status,
         autofill_click: app.autofill_click,
         load_job: app.load_job,
-
+        console: app.console,
         autofill_click_field: app.autofill_click_field,
         autofill_click_status: app.autofill_click_status,
     };

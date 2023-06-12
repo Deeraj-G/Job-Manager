@@ -53,7 +53,7 @@ db.define_table(
     Field('salary', 'integer'),
     Field('type', 'string'),
     Field('location', 'string'),
-    Field('status', 'string', notnull=True),
+    Field('status', 'string', default='In Progress', notnull=True),
     Field('date_applied', 'string', requires = IS_DATE(format=('%m-%d-%Y'), error_message='must be MM-DD-YYYY')),
     Field('field', 'string', notnull=True),
     Field('notes', 'text'),
