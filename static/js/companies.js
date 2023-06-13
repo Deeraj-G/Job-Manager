@@ -19,10 +19,16 @@ let init = (app) => {
         return a;
     };
 
+    app.get_companies = function (field_name) {
+        axios.get(get_companies_url, {params: {field_name: field_name}}).then(function (response) {
+            app.vue.companies = response.data.companies;
+        });
+    };
 
     // This contains all the methods.
     app.methods = {
         // Complete as you see fit.
+        get_companies: app.get_companies,
     };
 
     // This creates the Vue instance.

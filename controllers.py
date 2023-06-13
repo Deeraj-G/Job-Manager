@@ -186,9 +186,22 @@ def get_field_url():
     field_name = request.params.get ('field_name')
     return dict (url=URL('show_field_companies', field_name, signer=url_signer))
 
+"""----------------------------------------------------------------------------------------"""
+# For show_field_companies.html
 
 @action('show_field_companies/<field_name>')
 @action.uses("show_field_companies.html", db, url_signer.verify())
 def show_field_companies(field_name):
-    return dict(field_name=field_name)
-
+    return dict(
+        field_name=field_name,
+        get_companies_url=URL('get_companies', signer=url_signer),            
+    )
+    
+@action("get_companies")
+@action.uses(db, auth.user, url_signer.verify())
+def get_companies():
+    all_companies = db(db.job.field == request.params.get('field_name')).select('company').as_list()
+    
+    companies = list(set(company["_extra"]["company"] for company in all_companies))
+    
+    return dict(companies=companies)

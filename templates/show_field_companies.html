@@ -8,28 +8,30 @@
 
 <div class="section" id="vue-target2" v-cloak>
 
-<div class="section">
-    <h1>[[=field_name]] Companies</h1>
+    <div class="section">
+        <h1 style="font-size: 3em;">[[=field_name]] Companies</h1>
 
-    <button>
-        <a class="block" href="[[=URL('index')]]">
-            <span class="button" style="color: white;">Home Page</span>
-        </a>
-    </button>
-    <button>
-        <a class="block">
-            <span class="button" style="color: white;">Load Companies</span>
-        </a>
-    </button>
-    
-    <div v-for="c in companies">
-        {{c}}
+        <button>
+            <a class="block" href="[[=URL('index')]]">
+                <span class="button" style="color: white; font-size: 1.3em;">Home Page</span>
+            </a>
+        </button>
+        <button>
+            <a class="block" @click="get_companies('[[=field_name]]')">
+                <span class="button" style="color: white; font-size: 1.3em;">Load Companies</span>
+            </a>
+        </button>
+        
+        <div v-for="c in companies" style="text-align: center;">
+            <a style="display: inline-block; color: white; font-size: 1.1em;">{{ c }}</a>
+        </div>        
     </div>
+
 </div>
 
 [[block page_scripts]]
 <script>
-
+    let get_companies_url = "[[=XML(get_companies_url)]]";
 </script>
 <script src="js/companies.js"></script>
 [[end]]
