@@ -130,11 +130,13 @@ def field():
 def job_analytics():
     return dict()
 
+
 @action('get_field_url')
 @action.uses(db, url_signer, url_signer.verify()) 
 def get_field_url():
     field_name = request.params.get ('field_name')
     return dict (url=URL('show_field_companies', field_name, signer=url_signer))
+
 
 @action('show_field_companies/<field_name>')
 @action.uses("show_field_companies.html", db, url_signer.verify())
