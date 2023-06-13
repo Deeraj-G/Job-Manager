@@ -147,9 +147,12 @@ def similar_jobs():
         for job in db(db.job.auth_user_id == user['id']).select().as_list():
             date = datetime.strptime(job['time_entered'], '%Y-%m-%d %H:%M:%S.%f')
             delta = (date + timedelta(minutes=20))
-            # Check if it's been long enough since the original user inputted the job
-            if (job['field'] == sector) and (delta < datetime.now()):
-                similar_jobs.append(job)
+            try:
+                # Check if it's been long enough since the original user inputted the job
+                if (job['field'] == sector) and (delta <= datetime.now()):
+                    similar_jobs.append(job)
+            except:
+                pass
     
     return dict(similar_jobs=similar_jobs)
 
@@ -166,8 +169,11 @@ def salary_avg():
         for job in db(db.job.auth_user_id == user['id']).select().as_list():
             # Find the Average Salary of specified Sector
             if job['field'] == sector:
-                salary_avg += job['salary']
-                counter += 1
+                try:
+                    salary_avg += job['salary']
+                    counter += 1
+                except:
+                    pass
     
     # Calculate the Average
     salary_avg //= counter

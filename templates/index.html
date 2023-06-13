@@ -158,19 +158,23 @@
 			<!-- List the Similar Jobs -->
 			<div v-if="sim_jobs.length > 0">
 				<div style="text-align: center">Similar Jobs</div>
-				<div v-for="s in sim_jobs">
-					<div class="outline" style="margin-bottom: 10px">
-					<div>
-						Company: {{s.company}}
-					</div>
-					<div>
-						Role: {{s.title}}
-					</div>
-					<div>
-						Apply Here: {{s.URL}}
-					</div>
-					</div>
-				</div>
+				<table class="container" style="margin-bottom: 10px" >
+					<thead>
+						<tr>
+							<th scope="col">Company</th>
+							<th scope="col">Role</th>
+							<th scope="col">Apply Here</th>
+							
+						</tr>
+					</thead>
+					<tbody v-for="s in sim_jobs">
+						<tr>
+							<td>{{s.company}}</td>
+							<td>{{s.title}}</td>
+							<td>{{s.URL}}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 
 			<div style="margin-bottom: 20px"></div>
