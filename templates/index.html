@@ -7,7 +7,6 @@
 	a.navbar-item {
 		margin-top: 1px;
 		margin-right: 20px;
-
 	}
 </style>
 
@@ -28,18 +27,19 @@
 				<button class="secondary" @click="autofill_click($event, f)">{{f.field}}</button>
 			</div>
 		</label>
+
 		<!-- Filter accordian Bar -->
 		<details>
 			<summary>Filter</summary>
 			<input @input="job_filter" v-model='companyFilter' id="search" type="text" placeholder="Company">
-			<button v-show="filter_progress" class="secondary" style="width: 25%; float:left" @click="filter_progress = !filter_progress; job_filter()">In Progress</button>
-			<button v-show="!filter_progress" class="outline" style="width: 25%; float:left" @click="filter_progress = !filter_progress; job_filter()">In Progress</button>
-			<button v-show="filter_int" class="secondary" style="width: 25%; float:left" @click="filter_int = !filter_int; job_filter()">Interview</button>
-			<button v-show="!filter_int" class="outline" style="width: 25%; float:left" @click="filter_int = !filter_int; job_filter()">Interview</button>
-			<button v-show="filter_acc" class="secondary" style="width: 25%; float:left" @click="filter_acc = !filter_acc; job_filter()">Accepted</button>
-			<button v-show="!filter_acc" class="outline" style="width: 25%; float:left" @click="filter_acc = !filter_acc; job_filter()">Accepted</button>
-			<button v-show="filter_rej" class="secondary" style="width: 25%; float:left" @click="filter_rej = !filter_rej; job_filter()">Rejected</button>
-			<button v-show="!filter_rej" class="outline" style="width: 25%; float:left" @click="filter_rej = !filter_rej; job_filter()">Rejected</button>
+			<button v-show="filter_progress" class="secondary" style="width: 24%; float:left; margin-left: auto;" @click="filter_progress = !filter_progress; job_filter()">In Progress</button>
+			<button v-show="!filter_progress" class="outline" style="width: 24%; float:left; margin-left: auto" @click="filter_progress = !filter_progress; job_filter()">In Progress</button>
+			<button v-show="filter_int" class="secondary" style="width: 24%; float:left; margin-left: 10px;" @click="filter_int = !filter_int; job_filter()">Interview</button>
+			<button v-show="!filter_int" class="outline" style="width: 24%; float:left; margin-left: 10px;" @click="filter_int = !filter_int; job_filter()">Interview</button>
+			<button v-show="filter_acc" class="secondary" style="width: 24%; float:left; margin-left: 10px;" @click="filter_acc = !filter_acc; job_filter()">Accepted</button>
+			<button v-show="!filter_acc" class="outline" style="width: 24%; float:left; margin-left: 10px;" @click="filter_acc = !filter_acc; job_filter()">Accepted</button>
+			<button v-show="filter_rej" class="secondary" style="width: 24%; float:left; margin-left: 10px; margin-right: auto;" @click="filter_rej = !filter_rej; job_filter()">Rejected</button>
+			<button v-show="!filter_rej" class="outline" style="width: 24%; float:left; margin-left: 10px; margin-right: auto;" @click="filter_rej = !filter_rej; job_filter()">Rejected</button>
 			<input @input="job_filter" style="width: 49%" v-model='salaryMin' id="search" type="number" placeholder="Salary (Min)">
 			<input @input="job_filter" style="width: 49%; float:right" v-model='salaryMax' id="search" type="number" placeholder="Salary (Max)">
 			<button class="contrast" style="width: 20%" @click="reset_filter">Reset</button>
@@ -135,11 +135,45 @@
 			<a class="primary-button" @click="sector=j.field" href="[[=URL('job_analytics')]]">Job Analytics</a>
 			<!-- <button class="primary-button" onclick="location.href='[[=URL('job_analytics')]]'">Job Analytics</button> -->
 
-			<button @click="sector=j.field; console(sector);">Click Me First</button>
-
+			<!-- STATS: Average Salary -->
+			<!-- Calculates the Average Salary of this Job's Field -->
+			<button @click="sector=j.field;">Click Me First</button>
 			<button class="primary" @click="salary_avg();">
-				Average Salary of Similar Jobs
+				<div v-if="!avg_salary">
+					Average Salary of Similar Jobs
+				</div>
+				<div v-if="avg_salary" >
+					<span>The average salary in {{sector}} is {{avg_salary}}</span>
+				</div>
 			</button>
+
+			<!-- STATS: Similar Jobs -->
+			<!-- Button to find Similar Jobs -->
+			<button class="primary" @click="similar_jobs();">
+				<div>
+					Find Similar Jobs
+				</div>
+			</button>
+
+			<!-- List the Similar Jobs -->
+			<div v-if="sim_jobs.length > 0">
+				<div style="text-align: center">Similar Jobs</div>
+				<div v-for="s in sim_jobs">
+					<div class="outline" style="margin-bottom: 10px">
+					<div>
+						Company: {{s.company}}
+					</div>
+					<div>
+						Role: {{s.title}}
+					</div>
+					<div>
+						Apply Here: {{s.URL}}
+					</div>
+					</div>
+				</div>
+			</div>
+
+			<div style="margin-bottom: 20px"></div>
 
 		</div>
 	</div>
@@ -156,6 +190,7 @@
 	let field_url = "[[=XML(field_url)]]";
 	let get_field_url = "[[=XML(get_field_url)]]";
 	let salary_avg_url = "[[=XML(salary_avg_url)]]";
+	let similar_jobs_url = "[[=XML(similar_jobs_url)]]";
 	
 </script>
 <script src="js/index.js"></script>

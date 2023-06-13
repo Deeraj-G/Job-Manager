@@ -35,6 +35,7 @@ from .common import db, session, T, cache, auth, logger, authenticated, unauthen
 from py4web.utils.url_signer import URLSigner
 from .models import get_id, get_time, get_date
 from statistics import mean
+from datetime import datetime, timedelta
 
 url_signer = URLSigner(session)
 
@@ -54,6 +55,7 @@ def index():
         field_url=URL('field', signer=url_signer),
         get_field_url=URL('get_field_url', signer=url_signer),
         salary_avg_url=URL('salary_avg', signer=url_signer),
+        similar_jobs_url=URL('similar_jobs', signer=url_signer),
     )
 
 
@@ -134,11 +136,27 @@ def job_analytics():
         salary_avg_url=URL('salary_avg', signer=url_signer),
     )
 
+@action('similar_jobs', method=["GET"])
+@action.uses(db, auth.user, url_signer.verify())
+def similar_jobs():
+    sector = request.params.get('sector')
+    similar_jobs = []
+    # Go through each user in the auth_user table
+    for user in db(db.auth_user.id).select(db.auth_user.id).as_list():
+        # Go through each job a user holds
+        for job in db(db.job.auth_user_id == user['id']).select().as_list():
+            date = datetime.strptime(job['time_entered'], '%Y-%m-%d %H:%M:%S.%f')
+            delta = (date + timedelta(minutes=20))
+            # Check if it's been long enough since the original user inputted the job
+            if (job['field'] == sector) and (delta < datetime.now()):
+                similar_jobs.append(job)
+    
+    return dict(similar_jobs=similar_jobs)
+
 
 @action('salary_avg', method=["GET"])
 @action.uses(db, auth.user, url_signer.verify())
 def salary_avg():
-    print(request)
     sector = request.params.get('sector')
     salary_avg = 0
     counter = 0
@@ -153,8 +171,6 @@ def salary_avg():
     
     # Calculate the Average
     salary_avg //= counter
-
-
     return dict(salary_avg=salary_avg)
 
 
