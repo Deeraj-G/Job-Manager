@@ -216,14 +216,49 @@ def get_companies():
 @action.uses(db, url_signer, url_signer.verify()) 
 def get_comments_url():
     company_name = request.params.get ('company_name')
-    return dict (url=URL('comments', company_name, signer=url_signer))
+    field_name = request.params.get('field_name')
+    return dict (url=URL('comments', field_name, company_name, signer=url_signer))
 
 """----------------------------------------------------------------------------------------"""
 # For comments.html
 
-@action('comments/<company_name>')
+@action('comments/<field_name>/<company_name>')
 @action.uses("comments.html", db, url_signer.verify())
-def comments(company_name):
+def comments(field_name, company_name):
     return dict(
-        company_name=company_name,             
+        company_name=company_name,
+        field_name=field_name,
+        publish_url=URL('publish', signer=url_signer), 
+        get_comments_url=URL('get_comments', signer=url_signer),
+        get_back_url_url=URL('get_back_url', signer=url_signer),            
     )
+
+@action("publish", method="POST")
+@action.uses(db, auth.user, url_signer.verify())
+def publish(): 
+    comment_message = request.json.get('comment_message')
+    if len(comment_message) != 0:
+        db.comment.insert(content = comment_message, company = request.json.get('company_name'))
+    return "ok"
+
+@action("get_comments")
+@action.uses(db, auth.user, url_signer.verify())
+def get_comments():
+    company_name = request.params.get('company_name')
+    
+    comments = db(db.comment.company == company_name).select().as_list()
+    
+    for comment in comments:
+        time_difference =  datetime.utcnow() - comment['timestamp']
+        minutes = int(time_difference.total_seconds() / 60)
+        comment['timestamp'] = minutes
+
+    comments = sorted(comments, key=lambda x: x["timestamp"])
+
+    return dict(comments=comments)
+
+@action('get_back_url')
+@action.uses(db, url_signer, url_signer.verify()) 
+def get_back_url():
+    field_name = request.params.get ('field_name')
+    return dict (url=URL('show_field_companies', field_name, signer=url_signer))

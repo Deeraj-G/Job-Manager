@@ -10,6 +10,7 @@ let init = (app) => {
     // This is the Vue data.
     app.data = {
         comments: [],
+        comment_query: "",
     };
 
     app.enumerate = (a) => {
@@ -19,9 +20,37 @@ let init = (app) => {
         return a;
     };
 
+    app.publish = function (company_name) {
+        axios.post(publish_url, {comment_message: app.vue.comment_query, company_name: company_name}).then(function () {
+            app.vue.comment_query = ""
+            app.get_comments(company_name)
+        });
+    }
+
+    app.get_comments = function (company_name) {
+        axios.get(get_comments_url, {params: {company_name: company_name}}).then(function (response) {
+            app.vue.comments = app.enumerate(response.data.comments);
+        });
+    }
+    app.load_comments = function (company_name) {
+        axios.get(get_comments_url, {params: {company_name: company_name}}).then(function (response) {
+            app.vue.comments = app.enumerate(response.data.comments);
+        });
+    }
+
+    app.get_back_url = function (field_name) {
+        axios.get(get_back_url_url, {params: {field_name: field_name}}).then(function (response) {
+            window.location = response.data.url;
+        });
+    }
+
     // This contains all the methods.
     app.methods = {
         // Complete as you see fit.
+        publish: app.publish,
+        get_comments: app.get_comments,
+        load_comments: app.load_comments,
+        get_back_url: app.get_back_url,
     };
 
     // This creates the Vue instance.
@@ -33,7 +62,8 @@ let init = (app) => {
 
     // And this initializes it.
     app.init = () => {
-        app.vue.comments = app.enumerate(app.vue.comments);
+        app.vue.comments = []
+        app.vue.comment_query =""
     };
 
     // Call to the initializer.

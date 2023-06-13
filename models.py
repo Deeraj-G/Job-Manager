@@ -36,6 +36,9 @@ def get_time():
 def get_date():
     return datetime.date.today()
 
+def get_username():
+    return auth.current_user.get('username') if auth.current_user else None
+
 ### Define your table below
 #
 # db.define_table('thing', Field('name'))
@@ -75,10 +78,20 @@ db.define_table(
     Field('name', 'string'),
 )
 
+db.define_table('comment',
+                Field('author', 'reference auth_user', default=lambda: auth.user_id),
+                Field('name', default=get_username),
+                Field('company'),
+                Field('timestamp', 'datetime', default=get_time),
+                Field('content'),
+)
+
 db.job.id.readable = db.job.id.writable = False
 db.job.time_entered.readable = db.job.time_entered.writable = False # System logs this for internal use
 db.stats.id.readable = db.stats.id.writable = False
 db.field.id.readable = db.field.id.writable = False
+db.comment.id.readable = db.comment.id.writable = False
+db.comment.author.readable = db.comment.author.writable = False
 
 
 

@@ -8,15 +8,98 @@
 
 <div class="section" id="vue-target3" v-cloak>
 
-    <div class="section">
+    <div class="section" style="text-align: center;">
         <h1 style="font-size: 3em;">[[=company_name]] User Comments Area</h1>
     </div>
 
+    <div style="display: flex; justify-content: center;">
+        <button style="width: fit-content; margin-right: 10px;">
+            <a class="block" href="[[=URL('index')]]">
+                <span class="button" style="color: white; font-size: 1.3em;">Home Page</span>
+            </a>
+        </button>
+        <button style="width: fit-content; margin-left: 10px; margin-right: 10px">
+            <a class="block" @click="get_back_url('[[=field_name]]')">
+                <span class="button" style="color: white; font-size: 1.3em;">Back to List of Companies</span>
+            </a>
+        </button>
+        <button style="width: fit-content; margin-left: 10px;">
+            <a class="block" @click="load_comments('[[=company_name]]')">
+                <span class="button" style="color: white; font-size: 1.3em;">Load Comments</span>
+            </a>
+        </button>
+    </div>
+    
+    <div class="field">
+        <textarea class="textarea" placeholder="Comment about this company." rows="2" v-model="comment_query"></textarea>
+    </div>
+    <div class="field">
+        <div class="control"><button @click="publish('[[=company_name]]')" class="button is-link">Publish!</button></div>
+    </div>
+
+    <div v-for="c in comments" class="box">
+        <nav class="level is-mobile">
+          <div class="level-left">
+            <a class="level-item" aria-label="reply">
+              <span class="icon is-small">
+                <i class="fa fa-user"></i>
+              </span>
+              <span class="ml-2">{{c.name}}</span>
+            </a>
+          </div>
+          <div class="level-right">
+            <span class="level-item">
+              {{c.timestamp}} minutes ago
+            </span>
+          </div>
+        </nav>
+        <div class="content">
+          {{c.content}} 
+        </div>
+    </div> 
+      <!--<div v-for="r in meow_rows" class="box">
+        <nav class="level is-mobile">
+          <div class="level-left">
+            <a class="level-item" aria-label="reply">
+              <span class="icon is-small">
+                <i class="fa fa-user"></i>
+              </span>
+              <span class="ml-2">{{r.name}}</span>
+            </a>
+          </div>
+          <div class="level-right">
+            <span class="level-item">
+              {{r.timestamp}} minutes ago
+            </span>
+          </div>
+        </nav>
+        <div class="content">
+          {{r.content}} 
+        </div>
+        <nav class="level is-mobile">
+          <div class="level-left">
+            <a class="level-item" aria-label="reply">
+              <span class="icon is-small">
+                <i class="fa fa-reply" aria-hidden="true"></i>
+              </span>
+              <span class="ml-1">{{r.num_replies}}</span>
+            </a>
+            <a class="level-item" aria-label="retweet">
+              <span class="icon is-small">
+                <i @click="retweet(r._idx)" class="fa fa-retweet" aria-hidden="true"></i>
+              </span>
+            </a>
+          </div>
+        </nav>
+      </div>
+    -->
 </div>
 
 [[block page_scripts]]
 <script>
-    
+    let publish_url = "[[=XML(publish_url)]]";
+    let get_comments_url = "[[=XML(get_comments_url)]]";
+    let get_back_url_url = "[[=XML(get_back_url_url)]]";
 </script>
 <script src="js/comments.js"></script>
 [[end]]

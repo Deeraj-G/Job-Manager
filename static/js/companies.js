@@ -25,8 +25,8 @@ let init = (app) => {
         });
     };
 
-    app.go_to_comments = function (company_name) {
-        axios.get(get_comments_url_url, {params: {company_name: company_name}}).then(function (response) {
+    app.go_to_comments = function (company_name, field_name) {
+        axios.get(get_comments_url_url, {params: {company_name: company_name, field_name: field_name}}).then(function (response) {
             window.location = response.data.url;
         });
     }
