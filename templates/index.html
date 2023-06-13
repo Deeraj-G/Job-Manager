@@ -157,14 +157,12 @@
 
 			<!-- List the Similar Jobs -->
 			<div v-if="sim_jobs.length > 0">
-				<div style="text-align: center">Similar Jobs</div>
 				<table class="container" style="margin-bottom: 10px" >
 					<thead>
 						<tr>
-							<th scope="col">Company</th>
-							<th scope="col">Role</th>
-							<th scope="col">Apply Here</th>
-							
+							<th scope="col"><b>Company</b></th>
+							<th scope="col"><b>Role</b></th>
+							<th scope="col"><b>Apply Here</b></th>
 						</tr>
 					</thead>
 					<tbody v-for="s in sim_jobs">
