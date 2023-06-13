@@ -44,6 +44,9 @@ MAX_RETURNED_USERS = 20  # Our searches do not return more than 20 users.
 MAX_RESULTS = 20  # Maximum number of returned meows.
 
 
+"""----------------------------------------------------------------------------------------"""
+# For index.html
+
 @action('index')
 @action.uses('index.html', db, auth.user, url_signer)
 def index():
@@ -128,6 +131,15 @@ def field():
     
     return dict(fields=fields)
 
+@action('get_field_url')
+@action.uses(db, url_signer, url_signer.verify()) 
+def get_field_url():
+    field_name = request.params.get ('field_name')
+    return dict (url=URL('show_field_companies', field_name, signer=url_signer))
+
+"""----------------------------------------------------------------------------------------"""
+# For job_analytics.html
+
 @action('job_analytics')
 @action.uses('job_analytics.html', db, auth.user, url_signer)
 def job_analytics():
@@ -179,13 +191,6 @@ def salary_avg():
     salary_avg //= counter
     return dict(salary_avg=salary_avg)
 
-
-@action('get_field_url')
-@action.uses(db, url_signer, url_signer.verify()) 
-def get_field_url():
-    field_name = request.params.get ('field_name')
-    return dict (url=URL('show_field_companies', field_name, signer=url_signer))
-
 """----------------------------------------------------------------------------------------"""
 # For show_field_companies.html
 
@@ -194,7 +199,8 @@ def get_field_url():
 def show_field_companies(field_name):
     return dict(
         field_name=field_name,
-        get_companies_url=URL('get_companies', signer=url_signer),            
+        get_companies_url=URL('get_companies', signer=url_signer),
+        get_comments_url_url=URL('get_comments_url', signer=url_signer),             
     )
     
 @action("get_companies")
@@ -205,3 +211,19 @@ def get_companies():
     companies = list(set(company["_extra"]["company"] for company in all_companies))
     
     return dict(companies=companies)
+
+@action('get_comments_url')
+@action.uses(db, url_signer, url_signer.verify()) 
+def get_comments_url():
+    company_name = request.params.get ('company_name')
+    return dict (url=URL('comments', company_name, signer=url_signer))
+
+"""----------------------------------------------------------------------------------------"""
+# For comments.html
+
+@action('comments/<company_name>')
+@action.uses("comments.html", db, url_signer.verify())
+def comments(company_name):
+    return dict(
+        company_name=company_name,             
+    )

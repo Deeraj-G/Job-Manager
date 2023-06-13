@@ -23,8 +23,8 @@
         </button>
         
         <div v-for="c in companies" style="text-align: center;">
-            <a style="display: inline-block; color: white; font-size: 1.1em;">{{ c }}</a>
-        </div>        
+            <a style="display: inline-block; color: white; font-size: 1.1em;" @click="go_to_comments(c)">{{ c }}</a>
+        </div>
     </div>
 
 </div>
@@ -32,6 +32,7 @@
 [[block page_scripts]]
 <script>
     let get_companies_url = "[[=XML(get_companies_url)]]";
+    let get_comments_url_url = "[[=XML(get_comments_url_url)]]";
 </script>
 <script src="js/companies.js"></script>
 [[end]]

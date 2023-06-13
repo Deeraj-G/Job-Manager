@@ -9,7 +9,7 @@ let init = (app) => {
 
     // This is the Vue data.
     app.data = {
-        companies: [],
+        comments: [],
     };
 
     app.enumerate = (a) => {
@@ -19,35 +19,21 @@ let init = (app) => {
         return a;
     };
 
-    app.get_companies = function (field_name) {
-        axios.get(get_companies_url, {params: {field_name: field_name}}).then(function (response) {
-            app.vue.companies = response.data.companies;
-        });
-    };
-
-    app.go_to_comments = function (company_name) {
-        axios.get(get_comments_url_url, {params: {company_name: company_name}}).then(function (response) {
-            window.location = response.data.url;
-        });
-    }
-
     // This contains all the methods.
     app.methods = {
         // Complete as you see fit.
-        get_companies: app.get_companies,
-        go_to_comments: app.go_to_comments,
     };
 
     // This creates the Vue instance.
     app.vue = new Vue({
-        el: "#vue-target2",
+        el: "#vue-target3",
         data: app.data,
         methods: app.methods
     });
 
     // And this initializes it.
     app.init = () => {
-        app.vue.companies = app.enumerate(app.vue.companies);
+        app.vue.comments = app.enumerate(app.vue.comments);
     };
 
     // Call to the initializer.
