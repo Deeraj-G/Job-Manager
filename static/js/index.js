@@ -8,8 +8,9 @@ let init = (app) => {
 
     // This is the Vue data.
     app.data = {
-        // Complete as you see fit.
+        // lists
         rows: [],
+        filtered_jobs: [],
         known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
         known_statuses: [{status:"In Progress"}, {status:"Interview"}, {status:"Accepted"}, {status:"Rejected"}],
         showing_fields: [], // Dropdown options for Field field
@@ -23,7 +24,13 @@ let init = (app) => {
 				   {name:'Location',id:'location'},{name:'Status',id:'status'},
 				   {name:'Date Applied',id:'date_applied'},{name: 'Field',id: 'field'},
                    {name:'Other Notes',id:'notes'}],
-        inputField:"",
+        // Strings - filter input
+        inputField: "",
+        companyFilter: "",
+        statusFilter: "",
+        salaryMin: "",
+        salaryMax: "",
+        // Strings - DB input
         company: "",
         title: "",
         url: "",
@@ -36,7 +43,11 @@ let init = (app) => {
         date_applied: "",
         field: "",
         notes: "",
-        visible: true,
+        // bool
+        filter_progress: true,
+        filter_int: true,
+        filter_acc: true,
+        filter_rej: true,
     };
 
     app.enumerate = (a) => {
@@ -139,7 +150,36 @@ let init = (app) => {
 	app.load_job = function (row_item) {
         app.vue.active_job = [row_item]
     };
+    app.job_filter = function () {
+        app.vue.filtered_jobs = app.vue.rows
+        fil_min = app.vue.salaryMin
+        fil_max = app.vue.salaryMax
+        if (app.vue.salaryMin.length === 0) {
+            fil_min = 0
+        }
+        if (app.vue.salaryMax.length === 0) {
+            fil_max = Infinity
+        }
+        app.vue.filtered_jobs = app.vue.filtered_jobs.filter((item) =>
+            item.company.toLowerCase().includes(app.vue.companyFilter.toString().toLowerCase()) &&
+            item.salary >= fil_min && item.salary <= fil_max &&
+            ((item.status === 'In Progress' && app.vue.filter_progress) ||
+            (item.status === 'Interview' && app.vue.filter_int) ||
+            (item.status === 'Accepted' && app.vue.filter_acc) ||
+            (item.status === 'Rejected' && app.vue.filter_rej))
+        );
+    };
 
+    app.reset_filter = function () {
+        app.vue.companyFilter = ''
+        app.vue.filter_progress = true
+        app.vue.filter_int = true
+        app.vue.filter_acc = true
+        app.vue.filter_rej = true
+        app.vue.salaryMin = ''
+        app.vue.salaryMax = ''
+        app.vue.filtered_jobs = app.vue.rows
+    };
     // Add a row to the jobs table
     // Based off of add_contact()
     app.add_job = function () {
@@ -266,6 +306,8 @@ let init = (app) => {
         console: app.console,
         autofill_click_field: app.autofill_click_field,
         autofill_click_status: app.autofill_click_status,
+        job_filter: app.job_filter,
+        reset_filter: app.reset_filter,
     };
 
     // This creates the Vue instance.
@@ -281,7 +323,10 @@ let init = (app) => {
         axios.get(load_jobs_url).then(function (response) {
             console.log(response);
             app.vue.rows = app.decorate(app.enumerate(response.data.jobs));
+        }).finally(() => {
+            app.vue.filtered_jobs = app.vue.rows
         });
+       
     };
 
     // Call to the initializer.

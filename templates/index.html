@@ -8,9 +8,9 @@
 
 <div class="section" id="vue-target" v-cloak>
 
-    <div class="container block">
+	<div class="container block">
 		<!-- Title -->
-        <h1 class="title">
+		<h1 class="title">
 			<div style="text-align: center">
 				Job Manager
 			</div>
@@ -23,12 +23,27 @@
 				<button class="secondary" @click="autofill_click($event, f)">{{f.field}}</button>
 			</div>
 		</label>
-
+		<!-- Filter accordian Bar -->
+		<details>
+			<summary>Filter</summary>
+			<input @input="job_filter" v-model='companyFilter' id="search" type="text" placeholder="Company">
+			<button v-show="filter_progress" class="secondary" style="width: 25%; float:left" @click="filter_progress = !filter_progress; job_filter()">In Progress</button>
+			<button v-show="!filter_progress" class="outline" style="width: 25%; float:left" @click="filter_progress = !filter_progress; job_filter()">In Progress</button>
+			<button v-show="filter_int" class="secondary" style="width: 25%; float:left" @click="filter_int = !filter_int; job_filter()">Interview</button>
+			<button v-show="!filter_int" class="outline" style="width: 25%; float:left" @click="filter_int = !filter_int; job_filter()">Interview</button>
+			<button v-show="filter_acc" class="secondary" style="width: 25%; float:left" @click="filter_acc = !filter_acc; job_filter()">Accepted</button>
+			<button v-show="!filter_acc" class="outline" style="width: 25%; float:left" @click="filter_acc = !filter_acc; job_filter()">Accepted</button>
+			<button v-show="filter_rej" class="secondary" style="width: 25%; float:left" @click="filter_rej = !filter_rej; job_filter()">Rejected</button>
+			<button v-show="!filter_rej" class="outline" style="width: 25%; float:left" @click="filter_rej = !filter_rej; job_filter()">Rejected</button>
+			<input @input="job_filter" style="width: 49%" v-model='salaryMin' id="search" type="number" placeholder="Salary (Min)">
+			<input @input="job_filter" style="width: 49%; float:right" v-model='salaryMax' id="search" type="number" placeholder="Salary (Max)">
+			<button class="contrast" style="width: 20%" @click="reset_filter">Reset</button>
+		</details>
 		<!-- Listing of User's Jobs -->
 		<details role="list">
 			<summary aria-haspopup="listbox">My Jobs</summary>
-			<ul role="listbox" v-if="visible">
-				<li class="grid" v-for="r in rows">
+			<ul role="listbox">
+				<li class="grid" v-for="r in filtered_jobs">
 					<!-- Job Listing in Dropdown -->
 					<a class="level-item" @click="load_job(r)">
 						{{r.company}} - {{r.title}} - {{r.date_applied}}
@@ -61,17 +76,16 @@
 				<!-- Dropdown for the Status field -->
 				<div v-if="tag.id == 'status'">
 					<input type="text" class="input" v-model="j[tag.id]"
-						:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
-						:readonly="j._state[tag.id] === 'clean'"
-						@click="start_edit(j._idx, tag.id); search_fields_status(j._idx)"
-						@blur="stop_edit(j._idx, tag.id)"
-						@input="search_fields_status(j._idx)"
-					/>
+						   :class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+						   :readonly="j._state[tag.id] === 'clean'"
+						   @click="start_edit(j._idx, tag.id); search_fields_status(j._idx)"
+						   @blur="stop_edit(j._idx, tag.id)"
+						   @input="search_fields_status(j._idx)" />
 					<!-- <button class="secondary outline text-start"
-						@click="start_edit(j._idx, tag.id); search_fields_status(j._idx);" 
-						@input="stop_edit(j._idx, tag.id)"
-						
-					>{{rows[j._idx].status}}</button> -->
+			@click="start_edit(j._idx, tag.id); search_fields_status(j._idx);"
+			@input="stop_edit(j._idx, tag.id)"
+
+		>{{rows[j._idx].status}}</button> -->
 					<div v-for="s in showing_status_item">
 						<button class="secondary" @click="autofill_click_status(j._idx, s); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{s.status}}</button>
 					</div>
@@ -80,30 +94,33 @@
 				<div v-else-if="tag.id == 'field'">
 					<!-- Dropdown for the Field field -->
 					<input type="text" class="input" v-model="j[tag.id]"
-						:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
-						:readonly="j._state[tag.id] === 'clean'"
-						@click="start_edit(j._idx, tag.id)"
-						@blur="stop_edit(j._idx, tag.id)"
-						@input="search_fields_field(j._idx)"
-					/>
+						   :class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+						   :readonly="j._state[tag.id] === 'clean'"
+						   @click="start_edit(j._idx, tag.id)"
+						   @blur="stop_edit(j._idx, tag.id)"
+						   @input="search_fields_field(j._idx)" />
 					<div v-for="f in showing_fields_item">
 						<button class="secondary" @click="autofill_click_field(j._idx, f); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{f.field}}</button>
 					</div>
 				</div>
 
 				<!-- Input boxes for the other fields -->
+				<input v-else-if="tag.id == 'salary'" type="number" class="input" v-model="j[tag.id]"
+					   :class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+					   :readonly="j._state[tag.id] === 'clean'"
+					   @click="start_edit(j._idx, tag.id)"
+					   @blur="stop_edit(j._idx, tag.id)" />
 				<input v-else type="text" class="input" v-model="j[tag.id]"
-					:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
-						:readonly="j._state[tag.id] === 'clean'"
-						@click="start_edit(j._idx, tag.id)"
-						@blur="stop_edit(j._idx, tag.id)"
-					/>
+					   :class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+					   :readonly="j._state[tag.id] === 'clean'"
+					   @click="start_edit(j._idx, tag.id)"
+					   @blur="stop_edit(j._idx, tag.id)" />
 			</div>
 			<!-- Navigate to Job Analytics -->
 			<a class="primary-button" href="[[=URL('job_analytics')]]">Job Analytics</a>
 			<!-- <button class="primary-button" onclick="location.href='[[=URL('job_analytics')]]'">Job Analytics</button> -->
 		</div>
-    </div>
+	</div>
 </div>
 
 
