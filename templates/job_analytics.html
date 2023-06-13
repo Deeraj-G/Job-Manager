@@ -20,7 +20,16 @@
         </div>
     </h1>
 
-    <button class="primary" @click="">
+    <!-- <button class="primary" @click="salary_avg()">
         Average Salary
-    </button>
+    </button> -->
 </div>
+
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+	let salary_avg_url = "[[=XML(salary_avg_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

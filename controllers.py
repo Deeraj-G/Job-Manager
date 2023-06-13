@@ -34,6 +34,7 @@ from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash
 from py4web.utils.url_signer import URLSigner
 from .models import get_id, get_time, get_date
+from statistics import mean
 
 url_signer = URLSigner(session)
 
@@ -46,13 +47,13 @@ MAX_RESULTS = 20  # Maximum number of returned meows.
 @action.uses('index.html', db, auth.user, url_signer)
 def index():
     return dict(
-        # COMPLETE: return here any signed URLs you need.
         load_jobs_url=URL('get_jobs', signer=url_signer),
         add_job_url=URL('add_job', signer=url_signer),
         delete_job_url=URL('delete_job', signer=url_signer),
         edit_job_url=URL('edit_job', signer=url_signer),
         field_url=URL('field', signer=url_signer),
         get_field_url=URL('get_field_url', signer=url_signer),
+        salary_avg_url=URL('salary_avg', signer=url_signer),
     )
 
 
@@ -126,9 +127,35 @@ def field():
     return dict(fields=fields)
 
 @action('job_analytics')
-@action.uses('job_analytics.html', auth.user, url_signer)
+@action.uses('job_analytics.html', db, auth.user, url_signer)
 def job_analytics():
-    return dict()
+    return dict(
+        load_jobs_url=URL('get_jobs', signer=url_signer),
+        salary_avg_url=URL('salary_avg', signer=url_signer),
+    )
+
+
+@action('salary_avg', method=["GET"])
+@action.uses(db, auth.user, url_signer.verify())
+def salary_avg():
+    print(request)
+    sector = request.params.get('sector')
+    salary_avg = 0
+    counter = 0
+    # Go through each user in the auth_user table
+    for user in db(db.auth_user.id).select(db.auth_user.id).as_list():
+        # Go through each job a user holds
+        for job in db(db.job.auth_user_id == user['id']).select().as_list():
+            # Find the Average Salary of specified Sector
+            if job['field'] == sector:
+                salary_avg += job['salary']
+                counter += 1
+    
+    # Calculate the Average
+    salary_avg //= counter
+
+
+    return dict(salary_avg=salary_avg)
 
 
 @action('get_field_url')

@@ -27,7 +27,7 @@ let init = (app) => {
 
     // This creates the Vue instance.
     app.vue = new Vue({
-        el: "#vue-target",
+        el: "#vue-target2",
         data: app.data,
         methods: app.methods
     });

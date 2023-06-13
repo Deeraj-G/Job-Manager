@@ -79,20 +79,30 @@
 				<b>{{tag.name}}:</b>
 
 				<!-- Dropdown for the Status field -->
-				<div v-if="tag.id == 'status'">
+				<div v-if="tag.id == 'type'">
 					<input type="text" class="input" v-model="j[tag.id]"
-						   :class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
-						   :readonly="j._state[tag.id] === 'clean'"
-						   @click="start_edit(j._idx, tag.id); search_fields_status(j._idx)"
-						   @blur="stop_edit(j._idx, tag.id)"
-						   @input="search_fields_status(j._idx)" />
-					<!-- <button class="secondary outline text-start"
-			@click="start_edit(j._idx, tag.id); search_fields_status(j._idx);"
-			@input="stop_edit(j._idx, tag.id)"
+						:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+						:readonly="j._state[tag.id] === 'clean'"
+						@click="start_edit(j._idx, tag.id); search_type_status(j._idx, 'T')"
+						@blur="stop_edit(j._idx, tag.id)"
+						@input="search_type_status(j._idx, 'T')"
+					/>
+					<div v-for="t in showing_type_item">
+						<button class="secondary" @click="autofill_type_status(j._idx, t, 'T'); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{t.type}}</button>
+					</div>
+				</div>
 
-		>{{rows[j._idx].status}}</button> -->
+				<!-- Dropdown for the Status field -->
+				<div v-else-if="tag.id == 'status'">
+					<input type="text" class="input" v-model="j[tag.id]"
+						:class="{'is-focused': j._state[tag.id] === 'edit', 'is-static': j._state[tag.id] === 'clean'}"
+						:readonly="j._state[tag.id] === 'clean'"
+						@click="start_edit(j._idx, tag.id); search_type_status(j._idx, 'S')"
+						@blur="stop_edit(j._idx, tag.id)"
+						@input="search_type_status(j._idx, 'S')"
+					/>
 					<div v-for="s in showing_status_item">
-						<button class="secondary" @click="autofill_click_status(j._idx, s); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{s.status}}</button>
+						<button class="secondary" @click="autofill_type_status(j._idx, s, 'S'); start_edit(j._idx, tag.id)" @blur="stop_edit(j._idx, tag.id)">{{s.status}}</button>
 					</div>
 				</div>
 
@@ -122,8 +132,15 @@
 					   @blur="stop_edit(j._idx, tag.id)" />
 			</div>
 			<!-- Navigate to Job Analytics -->
-			<a class="primary-button" href="[[=URL('job_analytics')]]">Job Analytics</a>
+			<a class="primary-button" @click="sector=j.field" href="[[=URL('job_analytics')]]">Job Analytics</a>
 			<!-- <button class="primary-button" onclick="location.href='[[=URL('job_analytics')]]'">Job Analytics</button> -->
+
+			<button @click="sector=j.field; console(sector);">Click Me First</button>
+
+			<button class="primary" @click="salary_avg();">
+				Average Salary of Similar Jobs
+			</button>
+
 		</div>
 	</div>
 </div>
@@ -138,6 +155,8 @@
     let edit_job_url = "[[=XML(edit_job_url)]]";
 	let field_url = "[[=XML(field_url)]]";
 	let get_field_url = "[[=XML(get_field_url)]]";
+	let salary_avg_url = "[[=XML(salary_avg_url)]]";
+	
 </script>
 <script src="js/index.js"></script>
 [[end]]

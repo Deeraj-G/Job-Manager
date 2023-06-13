@@ -10,13 +10,14 @@ let init = (app) => {
     app.data = {
         // lists
         rows: [],
+        known_types: [{type: "In Person"}, {type: "Remote"}, {type: "Hybrid"}],
         filtered_jobs: [],
         known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
         known_statuses: [{status:"In Progress"}, {status:"Interview"}, {status:"Accepted"}, {status:"Rejected"}],
         showing_fields: [], // Dropdown options for Field field
-        showing_status: [], // Dropdown options for Status field
         showing_fields_item: [], // This is the full list of Fields in the Job table when user inputs characters
         showing_status_item: [], // This is the list of Statuses allowed in the Job table
+        showing_type_item: [],
         active_job: [],
 		job_tags: [{name:'Company Name',id:'company'},{name:'Job Title',id:'title'},{name:'URL',id:'URL'},
 				   {name:'Job Description',id:'description'},{name:'Referral',id:'referral'},
@@ -24,6 +25,8 @@ let init = (app) => {
 				   {name:'Location',id:'location'},{name:'Status',id:'status'},
 				   {name:'Date Applied',id:'date_applied'},{name: 'Field',id: 'field'},
                    {name:'Other Notes',id:'notes'}],
+        avg_salary: 0, // Average salary shown to user
+        sector: "", // Sector that is currently selected
         // Strings - filter input
         inputField: "",
         companyFilter: "",
@@ -84,20 +87,35 @@ let init = (app) => {
     };
 
     // Search through the job.fields database for known fields
-    app.search_fields_status = function (row_idx) {
-        // Populate showing_status_item with the known_statuses
-        app.vue.showing_status_item = app.vue.known_statuses
-
-        // Show no status if input is empty
-        if(app.vue.rows[row_idx].status.length === 0){
-            app.vue.showing_status_item = []
+    app.search_type_status = function (row_idx, reuse) {
+        if (reuse == 'S') {
+            // Populate showing_status_item with the known_statuses
+            app.vue.showing_status_item = app.vue.known_statuses
+            // Show no status if input is empty
+            if(app.vue.rows[row_idx].status.length === 0){
+                app.vue.showing_status_item = []
+            }
+        }
+        else if (reuse == 'T') {
+            // Populate showing_status_item with the known_statuses
+            app.vue.showing_type_item = app.vue.known_types
+            // Show no status if input is empty
+            if(app.vue.rows[row_idx].type.length === 0){
+                app.vue.showing_type_item = []
+            }
         }
     };
 
     // Autofill for the Status entry in the Job table
-    app.autofill_click_status = function (row_idx, item) {
-        app.vue.rows[row_idx].status = item.status
-        app.vue.showing_status_item = []
+    app.autofill_type_status = function (row_idx, item, reuse) {
+        if (reuse == 'S') {
+            app.vue.rows[row_idx].status = item.status
+            app.vue.showing_status_item = []
+        }
+        else if (reuse == 'T') {
+            app.vue.rows[row_idx].type = item.type
+            app.vue.showing_type_item = []
+        }
     };
 
     // Search through the job.fields database for known fields
@@ -123,6 +141,14 @@ let init = (app) => {
     app.autofill_click_field = function (row_idx, item) {
         app.vue.rows[row_idx].field = item.field
         app.vue.showing_fields_item = []
+    };
+
+    app.salary_avg = function () {
+        axios.get(salary_avg_url, {params: {
+            sector: app.vue.sector
+        }}).then (function (response) {
+            console.log(response.data.salary_avg)
+        });
     };
 
     app.decorate = (a) => {
@@ -295,17 +321,18 @@ let init = (app) => {
     app.methods = {
         add_job: app.add_job,
         delete_job: app.delete_job,
+        load_job: app.load_job,
         reset_form: app.reset_form,
         start_edit: app.start_edit,
         stop_edit: app.stop_edit,
         search_fields: app.search_fields,
         search_fields_field: app.search_fields_field,
-        search_fields_status: app.search_fields_status,
+        search_type_status: app.search_type_status,
         autofill_click: app.autofill_click,
-        load_job: app.load_job,
-        console: app.console,
         autofill_click_field: app.autofill_click_field,
-        autofill_click_status: app.autofill_click_status,
+        autofill_type_status: app.autofill_type_status,
+        salary_avg: app.salary_avg,
+        console: app.console,
         job_filter: app.job_filter,
         reset_filter: app.reset_filter,
     };
