@@ -8,8 +8,12 @@
 
 <div class="section" id="vue-target2" v-cloak>
 
-    <div class="section">
-        <h1 style="font-size: 3em;">[[=field_name]] Companies</h1>
+    <div class="container bloc">
+        <h1 class="title">
+            <div style="text-align: center">
+                [[=field_name]] Companies
+            </div>
+        </h1>
 
         <button>
             <a class="block" href="[[=URL('index')]]">
@@ -21,7 +25,7 @@
                 <span class="secondary button" style="color: white; font-size: 1.3em;">Reload Companies</span>
             </a>
         </button>
-        
+
         <div v-for="c in companies" style="text-align: center;">
             <button class="secondary" style="color: white; font-size: 1.1em; display: inline-block; width: 25% " @click="go_to_comments(c, '[[=field_name]]')">{{ c }}</button>
         </div>

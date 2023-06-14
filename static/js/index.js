@@ -275,7 +275,9 @@ let init = (app) => {
                 });
                 app.enumerate(app.vue.rows);
                 app.reset_form();
-            });
+            }).finally(() => {
+                app.vue.load_job(app.vue.filtered_jobs[app.vue.filtered_jobs.length - 1]);
+            }); 
     };
 
     app.console = function (obj) {
