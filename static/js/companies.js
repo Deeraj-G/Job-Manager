@@ -19,13 +19,15 @@ let init = (app) => {
         return a;
     };
 
-    app.get_companies = function (field_name) {
+    app.get_companies = function () {
         axios.get(get_companies_url, {params: {field_name: field_name}}).then(function (response) {
             app.vue.companies = response.data.companies;
+        }).finally(() => {
+            console.log(app.vue.companies)
         });
     };
 
-    app.go_to_comments = function (company_name, field_name) {
+    app.go_to_comments = function (company_name) {
         axios.get(get_comments_url_url, {params: {company_name: company_name, field_name: field_name}}).then(function (response) {
             window.location = response.data.url;
         });
@@ -48,6 +50,7 @@ let init = (app) => {
     // And this initializes it.
     app.init = () => {
         app.vue.companies = app.enumerate(app.vue.companies);
+        app.vue.get_companies()
     };
 
     // Call to the initializer.

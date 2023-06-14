@@ -11,6 +11,7 @@ let init = (app) => {
     app.data = {
         comments: [],
         comment_query: "",
+
     };
 
     app.enumerate = (a) => {
@@ -20,21 +21,18 @@ let init = (app) => {
         return a;
     };
 
-    app.publish = function (company_name) {
+    app.publish = function () {
         axios.post(publish_url, {comment_message: app.vue.comment_query, company_name: company_name}).then(function () {
             app.vue.comment_query = ""
             app.get_comments(company_name)
         });
     }
 
-    app.get_comments = function (company_name) {
+    app.get_comments = function () {
         axios.get(get_comments_url, {params: {company_name: company_name}}).then(function (response) {
             app.vue.comments = app.enumerate(response.data.comments);
-        });
-    }
-    app.load_comments = function (company_name) {
-        axios.get(get_comments_url, {params: {company_name: company_name}}).then(function (response) {
-            app.vue.comments = app.enumerate(response.data.comments);
+        }).finally(() => {
+            app.vue.comments.forEach(element => element.timestamp = Sugar.Date(element.timestamp + "Z").relative());
         });
     }
 
@@ -49,7 +47,6 @@ let init = (app) => {
         // Complete as you see fit.
         publish: app.publish,
         get_comments: app.get_comments,
-        load_comments: app.load_comments,
         get_back_url: app.get_back_url,
     };
 
@@ -63,7 +60,8 @@ let init = (app) => {
     // And this initializes it.
     app.init = () => {
         app.vue.comments = []
-        app.vue.comment_query =""
+        app.vue.comment_query = ""
+        app.vue.get_comments()
     };
 
     // Call to the initializer.

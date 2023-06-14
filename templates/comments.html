@@ -13,19 +13,14 @@
     </div>
 
     <div style="display: flex; justify-content: center;">
-        <button style="width: fit-content; margin-right: 10px;">
+        <button class="secondary" style="width: fit-content; margin-right: 10px;">
             <a class="block" href="[[=URL('index')]]">
                 <span class="button" style="color: white; font-size: 1.3em;">Home Page</span>
             </a>
         </button>
-        <button style="width: fit-content; margin-left: 10px; margin-right: 10px">
+        <button class="secondary" style="width: fit-content; margin-left: 10px; margin-right: 10px">
             <a class="block" @click="get_back_url('[[=field_name]]')">
                 <span class="button" style="color: white; font-size: 1.3em;">Back to List of Companies</span>
-            </a>
-        </button>
-        <button style="width: fit-content; margin-left: 10px;">
-            <a class="block" @click="load_comments('[[=company_name]]')">
-                <span class="button" style="color: white; font-size: 1.3em;">Load Comments</span>
             </a>
         </button>
     </div>
@@ -34,7 +29,7 @@
         <textarea class="textarea" placeholder="Comment about this company." rows="2" v-model="comment_query"></textarea>
     </div>
     <div class="field">
-        <div class="control"><button @click="publish('[[=company_name]]')" class="button is-link">Publish!</button></div>
+        <div class="control"><button class="secondary" @click="publish('[[=company_name]]')" class="button is-link">Publish!</button></div>
     </div>
 
     <div v-for="c in comments" class="box">
@@ -49,7 +44,7 @@
           </div>
           <div class="level-right">
             <span class="level-item">
-              {{c.timestamp}} minutes ago
+              {{c.timestamp}}
             </span>
           </div>
         </nav>
@@ -100,6 +95,7 @@
     let publish_url = "[[=XML(publish_url)]]";
     let get_comments_url = "[[=XML(get_comments_url)]]";
     let get_back_url_url = "[[=XML(get_back_url_url)]]";
+    let company_name = "[[=company_name]]"
 </script>
 <script src="js/comments.js"></script>
 [[end]]

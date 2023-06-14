@@ -13,17 +13,11 @@
 
         <button>
             <a class="block" href="[[=URL('index')]]">
-                <span class="button" style="color: white; font-size: 1.3em;">Home Page</span>
+                <span class="secondary" style="color: white; font-size: 1.3em;">Home Page</span>
             </a>
         </button>
-        <button>
-            <a class="block" @click="get_companies('[[=field_name]]')">
-                <span class="button" style="color: white; font-size: 1.3em;">Load Companies</span>
-            </a>
-        </button>
-        
         <div v-for="c in companies" style="text-align: center;">
-            <a style="display: inline-block; color: white; font-size: 1.1em;" @click="go_to_comments(c, '[[=field_name]]')">{{ c }}</a>
+            <button class="secondary" style="color: white; font-size: 1.1em; display: inline-block; width: 25% " @click="go_to_comments(c, '[[=field_name]]')">{{ c }}</button>
         </div>
     </div>
 
@@ -33,6 +27,7 @@
 <script>
     let get_companies_url = "[[=XML(get_companies_url)]]";
     let get_comments_url_url = "[[=XML(get_comments_url_url)]]";
+    let field_name = "[[=field_name]]";
 </script>
 <script src="js/companies.js"></script>
 [[end]]

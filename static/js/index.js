@@ -360,7 +360,6 @@ let init = (app) => {
     app.init = () => {
         // Put here any initialization code.
         axios.get(load_jobs_url).then(function (response) {
-            console.log(response);
             app.vue.rows = app.decorate(app.enumerate(response.data.jobs));
         }).finally(() => {
             app.vue.filtered_jobs = app.vue.rows
