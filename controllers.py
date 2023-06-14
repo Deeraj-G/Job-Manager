@@ -238,23 +238,17 @@ def comments(field_name, company_name):
 def publish(): 
     comment_message = request.json.get('comment_message')
     if len(comment_message) != 0:
-        db.comment.insert(content = comment_message, company = request.json.get('company_name'))
+        db.comment.insert(content = comment_message,
+                          company = request.json.get('company_name'),
+                          timestamp=get_time())
     return "ok"
 
 @action("get_comments")
 @action.uses(db, auth.user, url_signer.verify())
 def get_comments():
     company_name = request.params.get('company_name')
+    comments = db(db.comment.company == company_name).select(orderby=~db.comment.timestamp).as_list()
     
-    comments = db(db.comment.company == company_name).select().as_list()
-    
-    for comment in comments:
-        time_difference =  datetime.utcnow() - comment['timestamp']
-        minutes = int(time_difference.total_seconds() / 60)
-        comment['timestamp'] = minutes
-
-    comments = sorted(comments, key=lambda x: x["timestamp"])
-
     return dict(comments=comments)
 
 @action('get_back_url')
