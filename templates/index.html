@@ -75,6 +75,11 @@
 		<!-- Job Info Input Area -->
 		<div v-for="j in active_job">
 
+			<!-- Navigate to Job Analytics -->
+			<div style="text-align: center;">
+				<button class="secondary" @click="go_to_analytics(j.field)" style="color: white; display: inline-block; width: 25%" >Job Analytics</button>
+			</div>
+
 			<div v-for="tag in job_tags">
 				<b>{{tag.name}}:</b>
 
@@ -131,8 +136,6 @@
 					   @click="start_edit(j._idx, tag.id)"
 					   @blur="stop_edit(j._idx, tag.id)" />
 			</div>
-			<!-- Navigate to Job Analytics -->
-			<a class="primary-button" @click="sector=j.field" href="[[=URL('job_analytics', signer=url_signer)]]">Job Analytics</a>
 
 			<!-- STATS: Average Salary -->
 			<!-- Calculates the Average Salary of this Job's Field -->
@@ -190,9 +193,7 @@
     let edit_job_url = "[[=XML(edit_job_url)]]";
 	let field_url = "[[=XML(field_url)]]";
 	let get_field_url = "[[=XML(get_field_url)]]";
-	let salary_avg_url = "[[=XML(salary_avg_url)]]";
-	let similar_jobs_url = "[[=XML(similar_jobs_url)]]";
-	
+	let get_analytics_url = "[[=XML(get_analytics_url)]]";
 </script>
 <script src="js/index.js"></script>
 [[end]]

@@ -348,6 +348,12 @@ let init = (app) => {
         app.vue.averageTime = `Average time to hear back: ${averageDays} days ${averageHours} hours`;
     };
 
+    app.go_to_analytics = function (field_name) {
+        axios.get(get_analytics_url, {params: {field_name: field_name}}).then(function (response) {
+            window.location = response.data.url;
+        });
+    }
+
     // This contains all the methods.
     app.methods = {
         add_job: app.add_job,
@@ -367,6 +373,7 @@ let init = (app) => {
         job_filter: app.job_filter,
         reset_filter: app.reset_filter,
         similar_jobs: app.similar_jobs,
+        go_to_analytics: app.go_to_analytics,
     };
 
     // This creates the Vue instance.

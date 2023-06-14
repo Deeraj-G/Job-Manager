@@ -58,8 +58,7 @@ def index():
         edit_job_url=URL('edit_job', signer=url_signer),
         field_url=URL('field', signer=url_signer),
         get_field_url=URL('get_field_url', signer=url_signer),
-        salary_avg_url=URL('salary_avg', signer=url_signer),
-        similar_jobs_url=URL('similar_jobs', signer=url_signer),
+        get_analytics_url=URL('get_analytics_url', signer=url_signer),
         url_signer=url_signer,
     )
 
@@ -141,15 +140,23 @@ def get_field_url():
     field_name = request.params.get ('field_name')
     return dict (url=URL('show_field_companies', field_name, signer=url_signer))
 
+@action('get_analytics_url')
+@action.uses(db, url_signer, url_signer.verify()) 
+def get_analytics_url():
+    field_name = request.params.get ('field_name')
+    return dict (url=URL('job_analytics', field_name, signer=url_signer))
+
 """----------------------------------------------------------------------------------------"""
 # For job_analytics.html
 
-@action('job_analytics')
-@action.uses('job_analytics.html', db, auth.user, url_signer.verify())
-def job_analytics():
+@action('job_analytics/<field_name>')
+@action.uses("job_analytics.html", db, url_signer.verify())
+def job_analytics(field_name):
     return dict(
+        field_name=field_name,    
         load_jobs_url=URL('get_jobs', signer=url_signer),
         salary_avg_url=URL('salary_avg', signer=url_signer),
+        similar_jobs_url=URL('similar_jobs', signer=url_signer),
     )
 
 @action('similar_jobs', method=["GET"])
