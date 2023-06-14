@@ -50,6 +50,7 @@ db.define_table(
     Field('auth_user_id', "reference auth_user", default=lambda: auth.user_id, writable=False,readable=False),
     Field('company', 'string', notnull=True),
     Field('title', 'string', notnull=True),
+    Field('req_id', 'string'),
     Field('URL', 'string', 2048),
     Field('description', 'text'), # 'text' datatype allows for 32768 characters compared to string 512 characters
     Field('referral', 'string'),

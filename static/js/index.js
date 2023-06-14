@@ -20,7 +20,7 @@ let init = (app) => {
         showing_status_item: [], // This is the list of Statuses allowed in the Job table
         showing_type_item: [],
         active_job: [],
-		job_tags: [{name:'*Company Name',id:'company'},{name:'Job Title',id:'title'},{name:'URL',id:'URL'},
+		job_tags: [{name:'*Company Name',id:'company'},{name:'Job Title',id:'title'}, {name:'Req ID',id:'req_id'}, {name:'URL',id:'URL'},
 				   {name:'Job Description',id:'description'},{name:'Referral',id:'referral'},
 				   {name:'Salary Estimate',id:'salary'},{name:'Type',id:'type'},
 				   {name:'Location',id:'location'},{name:'Status',id:'status'},
@@ -38,6 +38,7 @@ let init = (app) => {
         // Strings - DB input
         company: "",
         title: "",
+        req_id: "",
         url: "",
         description: "",
         referral: "",
@@ -164,10 +165,11 @@ let init = (app) => {
 
     app.decorate = (a) => {
         a.map((e) => {
-            e._state = { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" };
+            e._state = { company: "clean", title: "clean", req_id: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" };
             e._server_vals = {
                 company: e.company,
                 title: e.title,
+                req_id: e.req_id,
                 URL: e.url,
                 description: e.description,
                 referral: e.referral,
@@ -226,6 +228,7 @@ let init = (app) => {
             {
                 company: app.vue.company,
                 title: app.vue.title,
+                req_id: app.vue.req_id,
                 url: app.vue.url,
                 description: app.vue.description,
                 referral: app.vue.referral,
@@ -236,12 +239,13 @@ let init = (app) => {
                 date_applied: app.vue.date_applied,
                 field: app.vue.field,
                 notes: app.vue.notes,
-                _state: { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" },
+                _state: { company: "clean", title: "clean", req_id: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" },
             }).then(function (response) {
                 app.vue.rows.push({
                     id: response.data.id,
                     company: app.vue.company,
                     title: app.vue.title,
+                    req_id: app.vue.req_id,
                     url: app.vue.url,
                     description: app.vue.description,
                     referral: app.vue.referral,
@@ -252,10 +256,11 @@ let init = (app) => {
                     date_applied: app.vue.date_applied,
                     field: app.vue.field,
                     notes: app.vue.notes,
-                    _state: { company: "clean", title: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" },
+                    _state: { company: "clean", title: "clean", req_id: "clean", URL: "clean", description: "clean", referral: "clean", salary: "clean", type: "clean", location: "clean", status: "clean", date_applied: "clean", field: "clean", notes: "clean" },
                     _server_vals: {
                         company: app.vue.company,
                         title: app.vue.title,
+                        req_id: app.vue.req_id,
                         URL: app.vue.url,
                         description: app.vue.description,
                         referral: app.vue.referral,
@@ -318,6 +323,7 @@ let init = (app) => {
     app.reset_form = function () {
         app.vue.company = "",
             app.vue.title = "",
+            app.vue.req_id = "",
             app.vue.url = "",
             app.vue.description = "",
             app.vue.referral = "",

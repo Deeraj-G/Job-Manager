@@ -78,6 +78,7 @@ def add_job():
     id = db.job.insert(
         company=request.json.get('company'),
         title=request.json.get('title'),
+        req_id=request.json.get('req_id'),
         url=request.json.get('url'),
         description=request.json.get('description'),
         referral=request.json.get('referral'),
