@@ -20,11 +20,11 @@ let init = (app) => {
         showing_status_item: [], // This is the list of Statuses allowed in the Job table
         showing_type_item: [],
         active_job: [],
-		job_tags: [{name:'Company Name',id:'company'},{name:'Job Title',id:'title'},{name:'URL',id:'URL'},
+		job_tags: [{name:'*Company Name',id:'company'},{name:'Job Title',id:'title'},{name:'URL',id:'URL'},
 				   {name:'Job Description',id:'description'},{name:'Referral',id:'referral'},
 				   {name:'Salary Estimate',id:'salary'},{name:'Type',id:'type'},
 				   {name:'Location',id:'location'},{name:'Status',id:'status'},
-				   {name:'Date Applied',id:'date_applied'},{name: 'Field',id: 'field'},
+				   {name:'Date Applied',id:'date_applied'},{name: '*Field',id: 'field'},
                    {name:'Other Notes',id:'notes'}],
         avg_salary: null, // Average salary shown to user
         sector: "", // Sector that is currently selected
