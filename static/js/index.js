@@ -46,6 +46,7 @@ let init = (app) => {
         location: "",
         status: "",
         date_applied: "",
+        averageTime: null, // Average time to hear back
         field: "",
         notes: "",
         // bool
@@ -185,6 +186,7 @@ let init = (app) => {
     // Loads the current job entry
 	app.load_job = function (row_item) {
         app.vue.active_job = [row_item]
+        app.vue.active_job[0].time_entered = row_item.time_entered;
     };
     app.job_filter = function () {
         app.vue.filtered_jobs = app.vue.rows
@@ -328,6 +330,24 @@ let init = (app) => {
             app.vue.notes = ""
     };
 
+    // Method to calculate the average time
+    app.calculateAverageTime = function() {
+        // Get the date difference between the applied date and the accepted date for all accepted jobs
+        const acceptedJobs = app.vue.rows.filter(job => job.status === 'Accepted');
+        const dateDifferences = acceptedJobs.map(job => {
+            const appliedDate = new Date(job.date_applied);
+            const acceptedDate = new Date(job.date_accepted);
+            return acceptedDate - appliedDate;
+        });
+        // Calculate time in milliseconds
+        const totalMilliseconds = dateDifferences.reduce((acc, curr) => acc + curr, 0);
+        const averageMilliseconds = totalMilliseconds / dateDifferences.length;
+        // Convert time to days and hours
+        const averageDays = Math.floor(averageMilliseconds / (1000 * 60 * 60 * 24));
+        const averageHours = Math.floor((averageMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        app.vue.averageTime = `Average time to hear back: ${averageDays} days ${averageHours} hours`;
+    };
+
     // This contains all the methods.
     app.methods = {
         add_job: app.add_job,
@@ -361,6 +381,7 @@ let init = (app) => {
         // Put here any initialization code.
         axios.get(load_jobs_url).then(function (response) {
             app.vue.rows = app.decorate(app.enumerate(response.data.jobs));
+            app.calculateAverageTime(); // Calculate the average time
         }).finally(() => {
             app.vue.filtered_jobs = app.vue.rows
         });

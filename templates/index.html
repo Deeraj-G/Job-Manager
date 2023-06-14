@@ -132,8 +132,7 @@
 					   @blur="stop_edit(j._idx, tag.id)" />
 			</div>
 			<!-- Navigate to Job Analytics -->
-			<a class="primary-button" @click="sector=j.field" href="[[=URL('job_analytics')]]">Job Analytics</a>
-			<!-- <button class="primary-button" onclick="location.href='[[=URL('job_analytics')]]'">Job Analytics</button> -->
+			<a class="primary-button" @click="sector=j.field" href="[[=URL('job_analytics', signer=url_signer)]]">Job Analytics</a>
 
 			<!-- STATS: Average Salary -->
 			<!-- Calculates the Average Salary of this Job's Field -->

@@ -36,6 +36,7 @@ from py4web.utils.url_signer import URLSigner
 from .models import get_id, get_time, get_date
 from statistics import mean
 from datetime import datetime, timedelta
+from datetime import datetime
 
 url_signer = URLSigner(session)
 
@@ -59,6 +60,7 @@ def index():
         get_field_url=URL('get_field_url', signer=url_signer),
         salary_avg_url=URL('salary_avg', signer=url_signer),
         similar_jobs_url=URL('similar_jobs', signer=url_signer),
+        url_signer=url_signer,
     )
 
 
@@ -72,7 +74,8 @@ def get_jobs():
 
 @action('add_job', method=["POST"])
 @action.uses(db, auth.user, url_signer)
-def add_job(): 
+def add_job():
+    time_entered = datetime.utcnow()
     id = db.job.insert(
         company=request.json.get('company'),
         title=request.json.get('title'),
@@ -86,9 +89,10 @@ def add_job():
         date_applied=request.json.get('date_applied'),
         field=request.json.get('field'),
         notes=request.json.get('notes'),
+        time_entered=time_entered,
     )
     
-    return dict(id=id)
+    return dict(id=id, time_entered=time_entered)
 
 
 @action('edit_job', method=["POST"])
@@ -141,7 +145,7 @@ def get_field_url():
 # For job_analytics.html
 
 @action('job_analytics')
-@action.uses('job_analytics.html', db, auth.user, url_signer)
+@action.uses('job_analytics.html', db, auth.user, url_signer.verify())
 def job_analytics():
     return dict(
         load_jobs_url=URL('get_jobs', signer=url_signer),

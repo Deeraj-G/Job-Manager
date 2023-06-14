@@ -13,12 +13,13 @@
 </style>
 
 <div class="section">
-   <!-- Title -->
-   <h1 class="title">
+    <!-- Title -->
+    <h1 class="title">
         <div style="text-align: center">
             Job Analytics
         </div>
     </h1>
+    <span id="time-entered"></span>
 
     <!-- <button class="primary" @click="salary_avg()">
         Average Salary
@@ -28,6 +29,16 @@
 
 [[block page_scripts]]
 <!-- Loads the index-specific js for Vue -->
+<script>
+    // Update the time entered
+    function updateTimeEntered() {
+        const currentTime = new Date().toLocaleTimeString();
+        // Update the span element with the time
+        document.getElementById("time-entered").textContent = "Time Entered: " + currentTime;
+    }
+    // Call the function to update the time on page load
+    updateTimeEntered();
+</script>
 <script>
 	let salary_avg_url = "[[=XML(salary_avg_url)]]";
 </script>
