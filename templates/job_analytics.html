@@ -35,7 +35,7 @@
                     Average Salary of Similar Jobs
                 </div>
                 <div v-if="avg_salary" >
-                    <span>The average salary in {{sector}} is {{avg_salary}}</span>
+                    <span>The average salary in {{sector}} is ${{avg_salary}}</span>
                 </div>
             </button>
         </div> 
@@ -52,11 +52,10 @@
         <!-- Button to see time to hear back -->
         <button class="primary" style="text-align: center;" @click="response_time()">
             <div v-if="!time_response">
-                <!-- <span id="time-entered"></span> -->
                 Average Response Rate
             </div>
             <div v-if="time_response" >
-                <span>The average response rate is {{time_response}}</span>
+                <span>The Average Response Rate is {{time_response}}</span>
             </div>
         </button>
 

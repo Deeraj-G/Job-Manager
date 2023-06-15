@@ -38,7 +38,6 @@ let init = (app) => {
             app.vue.time_response = response.data.response_time
         }).catch(function(error) {
             console.log(error);
-            
           });;
     };
 
