@@ -75,7 +75,7 @@
 		<!-- Job Info Input Area -->
 		<div v-for="j in active_job">
 			<!-- Navigate to Job Analytics -->
-			<div style="text-align: center;">
+			<div style="text-align: center;" v-if="j['field'] !== ''">
 				<button class="secondary" @click="go_to_analytics(j.field)" style="color: white; display: inline-block; width: 25%" >Job Analytics</button>
 			</div>
 
