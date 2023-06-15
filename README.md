@@ -19,7 +19,7 @@ The field search is the third element present on the main page. As a user types 
 
 The search bar acts like the aforementioned ‘Field’ field under the ‘Main Pages’ section. However, instead of the button inputting text, it instead acts as a link. Similar to the Field' field, only fields which have been input will appear, as they look at the same table in the database. Despite similar functionality, users can not save fields using this search bar. 
 
-##Job Lists
+## Job Lists
 The jobs list is the section the user is taken to after they click a button provided by the fields search bar. This page contains a link back to the main page and all companies that are affiliated with that given field. Upon clicking a company button, the user will be taken to a new page where they can comment on the company.
 
 The companies are compiled from all job tables based on the ‘Company’ and ‘Field’ areas. They are then listed out as clickable buttons, clicking a company button will takes users to a new page.
