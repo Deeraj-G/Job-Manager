@@ -11,7 +11,7 @@ let init = (app) => {
         // lists
         rows: [],
         filtered_jobs: [],
-        sim_jobs: [],
+        // sim_jobs: [],
         known_types: [{type: "In Person"}, {type: "Remote"}, {type: "Hybrid"}],
         known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
         known_statuses: [{status:"In Progress"}, {status:"Interview"}, {status:"Accepted"}, {status:"Rejected"}],
@@ -26,7 +26,7 @@ let init = (app) => {
 				   {name:'Location',id:'location'},{name:'Status',id:'status'},
 				   {name:'Date Applied',id:'date_applied'},{name: '*Field',id: 'field'},
                    {name:'Other Notes',id:'notes'}],
-        avg_salary: null, // Average salary shown to user
+        // avg_salary: null, // Average salary shown to user
         sector: "", // Sector that is currently selected
 
         // Strings - filter input
@@ -147,21 +147,6 @@ let init = (app) => {
         app.vue.showing_fields_item = []
     };
 
-    app.salary_avg = function () {
-        axios.get(salary_avg_url, {params: {
-            sector: app.vue.sector
-        }}).then (function (response) {
-            app.vue.avg_salary = response.data.salary_avg
-        });
-    };
-
-    app.similar_jobs = function () {
-        axios.get(similar_jobs_url, {params: {
-            sector: app.vue.sector
-        }}).then (function (response) {
-            app.vue.sim_jobs = response.data.similar_jobs
-        });
-    };
 
     app.decorate = (a) => {
         a.map((e) => {
@@ -376,11 +361,9 @@ let init = (app) => {
         autofill_click: app.autofill_click,
         autofill_click_field: app.autofill_click_field,
         autofill_type_status: app.autofill_type_status,
-        salary_avg: app.salary_avg,
         console: app.console,
         job_filter: app.job_filter,
         reset_filter: app.reset_filter,
-        similar_jobs: app.similar_jobs,
         go_to_analytics: app.go_to_analytics,
     };
 

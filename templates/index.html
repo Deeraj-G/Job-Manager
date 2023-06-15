@@ -128,46 +128,6 @@
 					   @blur="stop_edit(j._idx, tag.id)" />
 			</div>
 
-			<!-- STATS: Average Salary -->
-			<!-- Calculates the Average Salary of this Job's Field -->
-			<button @click="sector=j.field;">Click Me First</button>
-			<button class="primary" @click="salary_avg();">
-				<div v-if="!avg_salary">
-					Average Salary of Similar Jobs
-				</div>
-				<div v-if="avg_salary" >
-					<span>The average salary in {{sector}} is {{avg_salary}}</span>
-				</div>
-			</button>
-
-			<!-- STATS: Similar Jobs -->
-			<!-- Button to find Similar Jobs -->
-			<button class="primary" @click="similar_jobs();">
-				<div>
-					Find Similar Jobs
-				</div>
-			</button>
-
-			<!-- List the Similar Jobs -->
-			<div v-if="sim_jobs.length > 0">
-				<table class="container" style="margin-bottom: 10px" >
-					<thead>
-						<tr>
-							<th scope="col"><b>Company</b></th>
-							<th scope="col"><b>Role</b></th>
-							<th scope="col"><b>Apply Here</b></th>
-						</tr>
-					</thead>
-					<tbody v-for="s in sim_jobs">
-						<tr>
-							<td>{{s.company}}</td>
-							<td>{{s.title}}</td>
-							<td>{{s.URL}}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
 			<div style="margin-bottom: 20px"></div>
 
 		</div>

@@ -9,7 +9,10 @@ let init = (app) => {
 
     // This is the Vue data.
     app.data = {
-
+        listHidden: false,
+        sim_jobs: [],
+        avg_salary: null, // Average salary shown to user
+        sector: "", // Sector that is currently selected
     };
 
     app.enumerate = (a) => {
@@ -19,10 +22,33 @@ let init = (app) => {
         return a;
     };
 
+    app.salary_avg = function () {
+        axios.get(salary_avg_url, {params: {
+            sector: app.vue.sector
+        }}).then (function (response) {
+            app.vue.avg_salary = response.data.salary_avg
+        });
+    };
+
+    app.similar_jobs = function () {
+        axios.get(similar_jobs_url, {params: {
+            sector: app.vue.sector
+        }}).then (function (response) {
+            app.vue.sim_jobs = response.data.similar_jobs
+            if (app.vue.listHidden == false) {
+                app.vue.listHidden = true
+            } else if (app.vue.listHidden == true) {
+                app.vue.listHidden = false
+            }
+            
+        });
+    };
+
     // This contains all the methods.
     app.methods = {
         // Complete as you see fit.
-
+        salary_avg: app.salary_avg,
+        similar_jobs: app.similar_jobs,
     };
 
     // This creates the Vue instance.
@@ -34,7 +60,8 @@ let init = (app) => {
 
     // And this initializes it.
     app.init = () => {
-        
+        app.vue.sim_jobs = app.enumerate(app.vue.sim_jobs);
+        app.vue.sector = field_name;
     };
 
     // Call to the initializer.
