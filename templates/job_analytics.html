@@ -88,14 +88,9 @@
 <script>
     // Update the time entered
     function updateTimeEntered() {
-        //const currentTime = new Date().toLocaleTimeString();
         const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-
-
-        // Update the span element with the time
         document.getElementById("time-entered").textContent = "Average Response Time: " + currentTime;
     }
-    // Call the function to update the time on page load
     updateTimeEntered();
 </script>
 <script>
