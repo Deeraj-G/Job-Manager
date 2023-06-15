@@ -12,6 +12,7 @@ let init = (app) => {
         listHidden: false,
         sim_jobs: [],
         avg_salary: null, // Average salary shown to user
+        time_response: null,
         sector: "", // Sector that is currently selected
     };
 
@@ -28,6 +29,17 @@ let init = (app) => {
         }}).then (function (response) {
             app.vue.avg_salary = response.data.salary_avg
         });
+    };
+
+    app.response_time = function () {
+        axios.get(response_time_url, {params: {
+            sector: app.vue.sector
+        }}).then (function (response) {
+            app.vue.time_response = response.data.response_time
+        }).catch(function(error) {
+            console.log(error);
+            
+          });;
     };
 
     app.similar_jobs = function () {
@@ -49,6 +61,7 @@ let init = (app) => {
         // Complete as you see fit.
         salary_avg: app.salary_avg,
         similar_jobs: app.similar_jobs,
+        response_time: app.response_time,
     };
 
     // This creates the Vue instance.

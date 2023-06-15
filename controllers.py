@@ -158,6 +158,7 @@ def job_analytics(field_name):
         load_jobs_url=URL('get_jobs', signer=url_signer),
         salary_avg_url=URL('salary_avg', signer=url_signer),
         similar_jobs_url=URL('similar_jobs', signer=url_signer),
+        response_time_url=URL('response_time', signer=url_signer),
     )
 
 @action('similar_jobs', method=["GET"])
@@ -202,6 +203,26 @@ def salary_avg():
     # Calculate the Average
     salary_avg //= counter
     return dict(salary_avg=salary_avg)
+
+@action('response_time', method=["GET"])
+@action.uses(db, auth.user, url_signer.verify())
+def response_time():
+    user_id = auth.current_user.get('id')
+    job = db(db.job.auth_user_id == user_id).select().first()
+    time_entered_str = job.time_entered
+    time_format = "%Y-%m-%d %H:%M:%S.%f"
+    time_entered = datetime.strptime(time_entered_str, time_format)
+
+    current_time = datetime.utcnow()
+    duration = current_time - time_entered
+    positive_duration = abs(duration)
+    seconds = positive_duration.total_seconds()
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    seconds = int(seconds % 60)
+    formatted_duration = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+    return dict(response_time=formatted_duration)
 
 """----------------------------------------------------------------------------------------"""
 # For show_field_companies.html
