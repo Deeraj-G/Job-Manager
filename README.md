@@ -1,5 +1,6 @@
 # Job-Manager
-##Main Page
+A place to track your job apps.
+## Main Page
 The main page consists of three elements, the field search and filters, which will be touched on later, and the input dropdown. Each row of the dropdown contains all jobs which a user has input and an additional row to add a job. After adding a job, it will be automatically selected for the user to fill. The required fields, which are marked by an asterisk, are the only fields that must be filled, as they are used in other functions of the application. Every other field is relevant and useful for keeping track of information, however they are present only for the benefit of the user. 
 
 The main page has many dynamic elements, most of which are in the job editing field. All fields are edited in place, and will only update if the content is changed. 
