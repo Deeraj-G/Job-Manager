@@ -170,10 +170,10 @@ def similar_jobs():
         # Go through each job a user holds
         for job in db(db.job.auth_user_id == user['id']).select().as_list():
             date = datetime.strptime(job['time_entered'], '%Y-%m-%d %H:%M:%S.%f')
-            delta = (date + timedelta(minutes=20))
+            delta = (date + timedelta(seconds=60))
             try:
                 # Check if it's been long enough since the original user inputted the job
-                if (job['field'] == sector) and (delta <= datetime.now()):
+                if (job['field'] == sector) and (delta <= datetime.utcnow()):
                     similar_jobs.append(job)
             except:
                 pass

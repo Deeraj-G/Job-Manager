@@ -11,7 +11,6 @@ let init = (app) => {
         // lists
         rows: [],
         filtered_jobs: [],
-        // sim_jobs: [],
         known_types: [{type: "In Person"}, {type: "Remote"}, {type: "Hybrid"}],
         known_fields: [{field:"Art"},{field:"Science"},{field:"Math"}],
         known_statuses: [{status:"In Progress"}, {status:"Interview"}, {status:"Accepted"}, {status:"Rejected"}],
@@ -26,8 +25,6 @@ let init = (app) => {
 				   {name:'Location',id:'location'},{name:'Status',id:'status'},
 				   {name:'Date Applied',id:'date_applied'},{name: '*Field',id: 'field'},
                    {name:'Other Notes',id:'notes'}],
-        // avg_salary: null, // Average salary shown to user
-        sector: "", // Sector that is currently selected
 
         // Strings - filter input
         inputField: "",
@@ -95,18 +92,10 @@ let init = (app) => {
         if (reuse == 'S') {
             // Populate showing_status_item with the known_statuses
             app.vue.showing_status_item = app.vue.known_statuses
-            // Show no status if input is empty
-            if(app.vue.rows[row_idx].status.length === 0){
-                app.vue.showing_status_item = []
-            }
         }
         else if (reuse == 'T') {
             // Populate showing_status_item with the known_statuses
             app.vue.showing_type_item = app.vue.known_types
-            // Show no status if input is empty
-            if(app.vue.rows[row_idx].type.length === 0){
-                app.vue.showing_type_item = []
-            }
         }
     };
 
